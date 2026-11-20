@@ -1,4 +1,5 @@
 from prettytable import PrettyTable, ALL, DOUBLE_BORDER
+from datetime import datetime
 import pwinput
 import os
 import re
@@ -21,6 +22,29 @@ def ambil_password(prompt="Masukkan Password Akun : "):
 def bersihkan_layar():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
+def format_rupiah(angka):
+    return "Rp {:,}".format(angka).replace(",", ".")
+
+def cetak_struk(username, items, total, saldo=None):
+    print("\n" + "=" * 40)
+    print("STRUK PEMBELIAN PYCOMMERCE")
+    print("=" * 40)
+    print(f"Tanggal : {datetime.now().strftime('%d-%m-%Y %H:%M:%S')}")
+    print(f"pembeli : {username}")
+    print("-" * 40)
+    for nama, harga, jumlah in items:
+        print(nama)
+        print(f"   {jumlah} x {format_rupiah(harga)} = {format_rupiah(harga * jumlah)}")
+
+    print("-" * 40)
+    print(f"Total Pembayaran : {format_rupiah(total)}")
+    if saldo is not None:
+        print(f"Sisa Saldo : {format_rupiah(saldo)}")
+        print("=" * 40)
+        print("Terimah kasih telah berbelanja!".center(40))
+
+        
 class Batal(Exception):
     pass
 
@@ -51,7 +75,7 @@ def validasi_password(password):
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         return "Password Harus Memiliki Minimal 1 Simbol"
     
-    return "Password Valid Terima Kasih Banyak."
+    return "Password Valid."
 
 def menu_awal():
     field_names = ["No", "Menu Utama PyCommerce"]
