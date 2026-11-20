@@ -45,3 +45,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+print("\nProgram Telah Berhenti Berjalan. Terima Kasih!")
