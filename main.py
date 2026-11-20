@@ -46,4 +46,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-print("\nProgram Selesai, Terima Kasih Telah Menggunakan PyCommerce!")
+print("\nProgram Telah Berhenti Berjalan. Terima Kasih!")
