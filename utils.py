@@ -51,7 +51,7 @@ def validasi_password(password):
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         return "Password Harus Memiliki Minimal 1 Simbol"
     
-    return "Password Valid"
+    return "Password Valid Terima Kasih Banyak."
 
 def menu_awal():
     field_names = ["No", "Menu Utama PyCommerce"]
