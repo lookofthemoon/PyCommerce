@@ -31,4 +31,4 @@ def tampilkan_menu_admin():
             print("✅ Berhasil Keluar dari Menu Akses Admin!")
             break
         else:
-            print("Opsi Menu yang Dimasukkan Tidak Valid, Silahkan Masukkan Opsi Menu yang Valid (1-3)!")
+            print("Opsi Menu yang Dimasukkan Tidak Valid")
