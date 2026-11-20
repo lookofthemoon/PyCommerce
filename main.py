@@ -1,4 +1,3 @@
-
 import os
 from auth import login, registrasi
 from admin import tampilkan_menu_admin
@@ -45,5 +44,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-print("\nProgram Telah Berhenti Berjalan. Terima Kasih!")
