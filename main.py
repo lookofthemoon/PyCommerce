@@ -41,7 +41,7 @@ def main():
 
         else:
             print("\nOpsi Menu yang Dimasukkan Tidak Valid!")
-            input("Tekan Enter untuk mencoba kembali...")
+            input("Tekan Enter untuk mengulang kembali...")
 
 if __name__ == "__main__":
     main()
