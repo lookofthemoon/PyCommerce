@@ -1,5 +1,8 @@
 from prettytable import PrettyTable, ALL, DOUBLE_BORDER
 import pwinput
+import os
+import re
+
 
 def cetak_tabel(field_names, data_rows):
     table = PrettyTable()
@@ -15,6 +18,10 @@ def cetak_tabel(field_names, data_rows):
 
 def ambil_password(prompt="Masukkan Password Akun : "):
     return pwinput.pwinput(prompt=prompt, mask="*")
+
+def bersihkan_layar():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
 
 def menu_awal():
     field_names = ["No", "Menu Utama PyCommerce"]
