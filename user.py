@@ -24,7 +24,32 @@ def mulai_jual():
             continue
 
         break
+        
+    while True:
+        nama_penjual = input("Nama Penjual : ").strip()
+        if not nama_penjual:
+            print("❗ Nama penjual tidak boleh kosong. Silakan masukkan nama penjual.")
+            continue
+        break
 
+    list_tipe = ["Elektronik", "Pakaian", "Kecantikan", "Makanan", "Minuman", "Lainnya"]
+
+    print("\n--- PILIH TIPE/KATEGORI PRODUK ---")
+    for idx, tipe in enumerate(list_tipe, 1):
+        print(f"{idx}. {tipe}")
+
+    while True:
+        try:
+            pilihan_tipe = int(input("Masukkan nomor tipe produk (1-6): "))
+            if 1 <= pilihan_tipe <= len(list_tipe):
+                tipe_p = list_tipe[pilihan_tipe - 1]
+                break
+            else:
+                print("❗ Pilihan tidak valid. Silakan pilih nomor antara 1 hingga 6.")
+        except ValueError:
+            print("❗ Input harus berupa angka. Silakan coba lagi.")
+
+main
     try:
         stok_p = int(input("Jumlah Stok : "))
         harga_p = int(input("Harga Satuan (Rp) : "))
@@ -32,8 +57,7 @@ def mulai_jual():
         print("❗ Stok dan Harga harus berupa angka!")
         return
         
-    tipe_p = input("Tipe Produk : ")
-    desk_p = input("Deskripsi Produk : ")
+    desk_p = input("Deskripsi Produk : ").strip()
     
     daftar_produk[id_baru] = {
         "Nama": nama_p,
@@ -42,14 +66,16 @@ def mulai_jual():
         "Harga": harga_p,
         "Deskripsi": desk_p
     }
-    print(f"✅ Berhasil! Produk '{nama_p}' telah ditambahkan ke katalog.")
+    print(f"✅ Berhasil menambahkan produk '{nama_p}' dengan tipe '{tipe_p}' ke katalog!")
 
 def lihat_katalog_dan_beli(username):
     print("\n=== KATALOG PRODUK E-COMMERCE ===")
-    field_names = ["ID", "Nama Produk", "Harga", "Stok", "Tipe", "Deskripsi"]
+    field_names = ["ID", "Nama Produk", "Harga", "Stok", "Tipe", "Penjual", "Deskripsi"]
     rows = []
     for k_id, p in daftar_produk.items():
-        rows.append([k_id, p["Nama"], f"Rp{p['Harga']:,}", p["Stok"], p["Tipe"], p["Deskripsi"]])
+
+        penjual = p.get("Penjual", "-")
+        rows.append([k_id, p["Nama"], f"Rp{p['Harga']:,}", p["Stok"], p["Tipe"], penjual, p["Deskripsi"]])
     
     cetak_tabel(field_names, rows)
     
