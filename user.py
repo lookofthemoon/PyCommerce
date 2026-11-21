@@ -25,6 +25,23 @@ def mulai_jual():
 
         break
 
+    list_tipe = ["Elektronik", "Pakaian", "Kecantikan", "Makanan", "Minuman", "Lainnya"]
+
+    print("\n--- PILIH TIPE/KATEGORI PRODUK ---")
+    for index, tipe in enumerate(list_tipe, 1):
+        print(f"{index}. {tipe}")
+
+    while True:
+        try:
+            pilihan_tipe = int(input("Masukkan nomor tipe produk (1-6): "))
+            if 1 <= pilihan_tipe <= len(list_tipe):
+                tipe_p = list_tipe[pilihan_tipe - 1]
+                break
+            else:
+                print("❗ Pilihan tidak valid. Silakan pilih nomor antara 1 hingga 6.")
+        except ValueError:
+            print("❗ Input harus berupa angka. Silakan coba lagi.")
+
     try:
         stok_p = int(input("Jumlah Stok : "))
         harga_p = int(input("Harga Satuan (Rp) : "))
@@ -32,8 +49,7 @@ def mulai_jual():
         print("❗ Stok dan Harga harus berupa angka!")
         return
         
-    tipe_p = input("Tipe Produk : ")
-    desk_p = input("Deskripsi Produk : ")
+    desk_p = input("Deskripsi Produk : ").strip()
     
     daftar_produk[id_baru] = {
         "Nama": nama_p,
@@ -42,7 +58,7 @@ def mulai_jual():
         "Harga": harga_p,
         "Deskripsi": desk_p
     }
-    print(f"✅ Berhasil! Produk '{nama_p}' telah ditambahkan ke katalog.")
+    print(f"✅ Berhasil menambahkan produk '{nama_p}' dengan tipe '{tipe_p}' ke katalog!")
 
 def lihat_katalog_dan_beli(username):
     print("\n=== KATALOG PRODUK E-COMMERCE ===")
