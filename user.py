@@ -25,11 +25,18 @@ def mulai_jual():
 
         break
 
+    while True:
+        nama_penjual = input("Nama Penjual : ").strip()
+        if not nama_penjual:
+            print("❗ Nama penjual tidak boleh kosong. Silakan masukkan nama penjual.")
+            continue
+        break
+
     list_tipe = ["Elektronik", "Pakaian", "Kecantikan", "Makanan", "Minuman", "Lainnya"]
 
     print("\n--- PILIH TIPE/KATEGORI PRODUK ---")
-    for index, tipe in enumerate(list_tipe, 1):
-        print(f"{index}. {tipe}")
+    for idx, tipe in enumerate(list_tipe, 1):
+        print(f"{idx}. {tipe}")
 
     while True:
         try:
@@ -62,10 +69,12 @@ def mulai_jual():
 
 def lihat_katalog_dan_beli(username):
     print("\n=== KATALOG PRODUK E-COMMERCE ===")
-    field_names = ["ID", "Nama Produk", "Harga", "Stok", "Tipe", "Deskripsi"]
+    field_names = ["ID", "Nama Produk", "Harga", "Stok", "Tipe", "Penjual", "Deskripsi"]
     rows = []
     for k_id, p in daftar_produk.items():
-        rows.append([k_id, p["Nama"], f"Rp{p['Harga']:,}", p["Stok"], p["Tipe"], p["Deskripsi"]])
+
+        penjual = p.get("Penjual", "-")
+        rows.append([k_id, p["Nama"], f"Rp{p['Harga']:,}", p["Stok"], p["Tipe"], penjual, p["Deskripsi"]])
     
     cetak_tabel(field_names, rows)
     
