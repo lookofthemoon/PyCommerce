@@ -24,7 +24,7 @@ def mulai_jual():
             continue
 
         break
-
+        
     while True:
         nama_penjual = input("Nama Penjual : ").strip()
         if not nama_penjual:
@@ -49,6 +49,7 @@ def mulai_jual():
         except ValueError:
             print("❗ Input harus berupa angka. Silakan coba lagi.")
 
+main
     try:
         stok_p = int(input("Jumlah Stok : "))
         harga_p = int(input("Harga Satuan (Rp) : "))
