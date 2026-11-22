@@ -1,44 +1,93 @@
-akun_admin = {
-    "Admin": "pyc"
+import json
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_FILE = os.path.join(BASE_DIR, "database.json")
+
+DATA_DEFAULT = {
+    "akun_admin": {
+        "Admin": "Pyc1#"
+    },
+    "akun_user": {
+        "nopi": "Nopi1#"
+    },
+    "daftar_produk": {
+        "K001": {
+            "Nama": "Premium Case",
+            "Stok": 101,
+            "Tipe": "Aksesoris",
+            "Harga": 85000,
+            "Penjual": "PyCommerce Official",
+            "Deskripsi": "Tersedia untuk seluruh tipe HP"
+        },
+        "K002": {
+            "Nama": "Holder Akrilik",
+            "Stok": 55,
+            "Tipe": "Aksesoris/Kolektif",
+            "Harga": 45000,
+            "Penjual": "PyCommerce Official",
+            "Deskripsi": "Berukuran 7,4 x 10 cm, tebal 5 mm, berbahan dasar akrilik"
+        },
+        "K003": {
+            "Nama": "Jersey Baseball Custom",
+            "Stok": 97,
+            "Tipe": "Pakaian/Fashion",
+            "Harga": 120000,
+            "Penjual": "PyCommerce Official",
+            "Deskripsi": "All size, desain custom dapat dikirim melalui email penjual"
+        },
+        "K004": {
+            "Nama": "Paper Clip",
+            "Stok": 23,
+            "Tipe": "Organizer",
+            "Harga": 11000,
+            "Penjual": "PyCommerce Official",
+            "Deskripsi": "Berwarna putih, berisi 50 pcs per pack"
+        }
+    },
+    "keranjang": {},
+    "riwayat_pesanan": {}
 }
 
-akun_user = {
-    "nopi": "1",
-    "nando": "2",
-    "adam": "3",
-    "alya": "4"
-}
+def _salin_default():
+    return json.loads(json.dumps(DATA_DEFAULT))
 
-daftar_produk = {
-    "K001": {
-        "Nama": "Premium Case",
-        "Stok": 101,
-        "Tipe": "Aksesoris",
-        "Harga": 85000,
-        "Deskripsi": "Tersedia untuk seluruh tipe HP"
-    },
-    "K002": {
-        "Nama": "Holder Akrilik",
-        "Stok": 55,
-        "Tipe": "Aksesoris/Kolektif",
-        "Harga": 45000,
-        "Deskripsi": "Berukuran 7,4 x 10 cm, tebal 5 mm, berbahan dasar akrilik"
-    },
-    "K003": {
-        "Nama": "Jersey Baseball Custom",
-        "Stok": 97,
-        "Tipe": "Pakaian/Fashion",
-        "Harga": 120000,
-        "Deskripsi": "All size, desain custom dapat dikirim melalui email penjual"
-    },
-    "K004": {
-        "Nama": "Paper Clip",
-        "Stok": 23,
-        "Tipe": "Organizer",
-        "Harga": 11000,
-        "Deskripsi": "Berwarna putih, berisi 50 pcs per pack"
+def simpan_database():
+    payload = {
+        "akun_admin": akun_admin,
+        "akun_user": akun_user,
+        "daftar_produk": daftar_produk,
+        "keranjang": keranjang,
+        "riwayat_pesanan": riwayat_pesanan,
     }
-}
+    with open(DB_FILE, "w", encoding="utf-8") as file:
+        json.dump(payload, file, indent=2, ensure_ascii=False)
 
-keranjang = {}          
-riwayat_pesanan = {}
+def muat_database():
+    if not os.path.exists(DB_FILE):
+        data = _salin_default()
+        with open(DB_FILE, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2, ensure_ascii=False)
+        return data
+
+    try:
+        with open(DB_FILE, "r", encoding="utf-8") as file:
+            data = json.load(file)
+    except (json.JSONDecodeError, OSError):
+        data = _salin_default()
+
+    default = _salin_default()
+    return {
+        "akun_admin": data.get("akun_admin", default["akun_admin"]),
+        "akun_user": data.get("akun_user", default["akun_user"]),
+        "daftar_produk": data.get("daftar_produk", default["daftar_produk"]),
+        "keranjang": data.get("keranjang", default["keranjang"]),
+        "riwayat_pesanan": data.get("riwayat_pesanan", default["riwayat_pesanan"]),
+    }
+
+_data = muat_database()
+akun_admin = _data["akun_admin"]
+akun_user = _data["akun_user"]
+daftar_produk = _data["daftar_produk"]
+keranjang = _data["keranjang"]
+riwayat_pesanan = _data["riwayat_pesanan"]
