@@ -402,15 +402,15 @@ def _tambah_produk_ke_keranjang(username):
 
 def _tampilkan_katalog():
     print("\n=== KATALOG PRODUK E-COMMERCE ===")
-    field_names = ["ID", "Nama Produk", "Harga", "Stok", "Tipe", "Penjual", "Deskripsi"]
+    field_names = ["ID","Penjual","Nama Produk", "Harga", "Stok", "Tipe", "Deskripsi"]
     rows = [
         [
             k_id,
+            p.get("Penjual", "-"),
             p["Nama"],
             f"Rp{p['Harga']:,}",
             p["Stok"],
             p["Tipe"],
-            p.get("Penjual", "-"),
             p["Deskripsi"],
         ]
         for k_id, p in daftar_produk.items()
@@ -438,6 +438,9 @@ def kelola_keranjang_dan_checkout(username):
 
 def lihat_katalog_dan_beli(username):
     bersihkan_layar()
+    if not daftar_produk:
+        print("\n❗ Katalog produk masih kosong! Belum ada barang yang tersedia.")
+        return
     _tampilkan_katalog()
     _tambah_produk_ke_keranjang(username)
     kelola_keranjang_dan_checkout(username)
