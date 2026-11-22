@@ -1,9 +1,9 @@
 from prettytable import PrettyTable, ALL, DOUBLE_BORDER
 from datetime import datetime
 import pwinput
+import time
 import os
 import re
-
 
 def cetak_tabel(field_names, data_rows):
     table = PrettyTable()
@@ -15,7 +15,6 @@ def cetak_tabel(field_names, data_rows):
     for row in data_rows:
         table.add_row(row)
     print(table)
-
 
 def generate_id_produk(produk_dict):
     nomor_tertinggi = 0
@@ -32,14 +31,15 @@ def generate_id_produk(produk_dict):
 
     return f"K{nomor_berikutnya:03d}"
 
-
 def ambil_password(prompt="Masukkan Password Akun : "):
     return pwinput.pwinput(prompt=prompt, mask="*")
 
-def bersihkan_layar(jeda=False):
-    if jeda:
-        input()
+def bersihkan_layar():
     os.system("cls" if os.name == "nt" else "clear")
+
+def bersihkan_layar_dengan_jeda(detik=1.5):
+    time.sleep(detik)
+    bersihkan_layar()
 
 def format_rupiah(angka):
     return "Rp {:,}".format(angka).replace(",", ".")
@@ -71,7 +71,6 @@ def input_batal(prompt):
         raise Batal
     return data
 
-
 def validasi_username(username):
     if len(username) < 4:
         return "Username minimal 4 karakter."
@@ -101,42 +100,20 @@ def menu_awal():
     rows = [
         ["1", "🔐 Login"],
         ["2", "📁 Register Akun Baru"],
-        ["3", "🔓 Keluar dari Program"]
+        ["3", "🔓 Keluar dari Program"],
     ]
     cetak_tabel(field_names, rows)
-
 
 def menu_admin(username):
     field_names = ["No", f"Opsi Menu Admin ({username})"]
     rows = [
         ["1", "Lihat Daftar Akun User"],
         ["2", "Hapus Akun dari Daftar Akun User"],
-        ["3", "Keluar Dari Menu Akses Admin"]
+        ["3", "Kelola Pengajuan Isi Saldo User"],
+        ["4", "Keluar Dari Menu Akses Admin"],
     ]
     cetak_tabel(field_names, rows)
 
-
-def menu_user(username):
-    field_names = ["No", f"Opsi Menu User ({username})"]
-    rows = [
-        ["1", "Mulai Jual Produk Baru"],
-        ["2", "Lihat Katalog & Tambahkan ke Keranjang"],
-        ["3", "Lihat Pesanan Saya"],
-        ["4", "Keluar Dari Menu Akses User"]
-    ]
-    cetak_tabel(field_names, rows)
-
-
-def menu_katalog_keranjang(username):
-    field_names = ["No", f"Menu Keranjang & Checkout ({username})"]
-    rows = [
-        ["1", "Lihat Keranjang"],
-        ["2", "Hapus Produk dari Keranjang"],
-        ["3", "Checkout"],
-        ["4", "Kembali ke Menu User"]
-    ]
-    cetak_tabel(field_names, rows)
-    
 def menu_user(username):
     field_names = ["No", f"Opsi Menu User ({username})"]
     rows = [
@@ -144,7 +121,27 @@ def menu_user(username):
         ["2", "Kelola Produk Saya"],
         ["3", "Lihat Katalog & Tambahkan ke Keranjang"],
         ["4", "Lihat Pesanan Saya"],
-        ["5", "Keluar Dari Menu Akses User"]
+        ["5", "Saldo & Pengajuan Top-Up"],
+        ["6", "Keluar Dari Menu Akses User"],
+    ]
+    cetak_tabel(field_names, rows)
+
+def menu_saldo_user(username):
+    field_names = ["No", f"Menu Saldo ({username})"]
+    rows = [
+        ["1", "Ajukan Pengisian Saldo"],
+        ["2", "Lihat Riwayat Pengajuan Saldo Saya"],
+        ["3", "Kembali ke Menu User"],
+    ]
+    cetak_tabel(field_names, rows)
+
+def menu_katalog_keranjang(username):
+    field_names = ["No", f"Menu Keranjang & Checkout ({username})"]
+    rows = [
+        ["1", "Lihat Keranjang"],
+        ["2", "Hapus Produk dari Keranjang"],
+        ["3", "Checkout"],
+        ["4", "Kembali ke Menu User"],
     ]
     cetak_tabel(field_names, rows)
 
@@ -153,6 +150,6 @@ def menu_kelola_produk_saya(username):
     rows = [
         ["1", "Ubah Detail Produk Saya"],
         ["2", "Hapus Produk Saya"],
-        ["3", "Kembali ke Menu User"]
+        ["3", "Kembali ke Menu User"],
     ]
     cetak_tabel(field_names, rows)

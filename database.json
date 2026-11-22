@@ -3,8 +3,12 @@
     "Admin": "Pyc1#"
   },
   "akun_user": {
-    "nopi": "Nopi1#"
+    "user": "User1#"
   },
+  "saldo_user": {
+    "user": 0
+  },
+  "pengajuan_saldo": [],
   "daftar_produk": {},
   "keranjang": {},
   "riwayat_pesanan": {}

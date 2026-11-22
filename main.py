@@ -1,12 +1,11 @@
 from auth import login, registrasi
 from admin import tampilkan_menu_admin
 from user import tampilkan_menu_user
-from utils import menu_awal, bersihkan_layar
+from utils import menu_awal, bersihkan_layar, bersihkan_layar_dengan_jeda
 
 def main():
     while True:
         bersihkan_layar()
-
         print("Selamat Datang di PyCommerce : Sistem E-Commerce")
         print("Silahkan Login Terlebih Dahulu!")
         print("================================================")
@@ -20,6 +19,7 @@ def main():
 
             if gagal_login:
                 print("\nBatas percobaan login telah habis. Program berhenti.")
+                bersihkan_layar_dengan_jeda(1.5)
                 break
 
             if username is not None and role is not None:
@@ -39,8 +39,8 @@ def main():
             break
 
         else:
-            print("\nOpsi Menu yang Dimasukkan Tidak Valid!")
+            print("\n❌ Opsi Menu yang Dimasukkan Tidak Valid!")
+            bersihkan_layar_dengan_jeda(1.5)
 
 if __name__ == "__main__":
     main()
-
