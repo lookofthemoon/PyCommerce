@@ -24,7 +24,7 @@ from utils import (
 
 LIST_TIPE = ["Elektronik", "Pakaian", "Kecantikan", "Makanan", "Minuman", "Lainnya"]
 
-def _generate_id_transaksi():
+def generate_id_transaksi():
     nomor_tertinggi = 0
     for daftar_trx in riwayat_pesanan.values():
         if not isinstance(daftar_trx, list):
@@ -38,11 +38,11 @@ def _generate_id_transaksi():
                     nomor_tertinggi = angka
     return f"TRX{nomor_tertinggi + 1:03d}"
 
-def _ambil_saldo(username):
+def ambil_saldo(username):
     saldo_user.setdefault(username, 0)
     return saldo_user[username]
 
-def _generate_id_pengajuan():
+def generate_id_pengajuan():
     nomor_tertinggi = 0
     for item in pengajuan_saldo:
         id_item = str(item.get("id", ""))
@@ -53,25 +53,25 @@ def _generate_id_pengajuan():
                 nomor_tertinggi = angka
     return f"TOP{nomor_tertinggi + 1:03d}"
 
-def _ajukan_pengisian_saldo(username):
+def ajukan_pengisian_saldo(username):
     bersihkan_layar()
     print(f"\n=== AJUKAN PENGISIAN SALDO ({username.upper()}) ===")
-    print(f"Saldo Anda saat ini : {format_rupiah(_ambil_saldo(username))}")
+    print(f"Saldo Anda Saat Ini : {format_rupiah(ambil_saldo(username))}")
 
     try:
-        nominal = int(input("Masukkan nominal pengisian saldo (Rp) : "))
+        nominal = int(input("Masukkan Nominal Pengisian Saldo (Rp) : "))
     except ValueError:
-        print("❗ Nominal harus berupa angka bulat!")
+        print("❗ Nominal Harus Berupa Angka Bulat!")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
     if nominal <= 0:
-        print("❗ Nominal pengisian saldo harus lebih dari Rp 0!")
+        print("❗ Nominal Pengisian Saldo Harus Lebih dari Rp 0!")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
     pengajuan_baru = {
-        "id": _generate_id_pengajuan(),
+        "id": generate_id_pengajuan(),
         "username": username,
         "nominal": nominal,
         "status": "Menunggu",
@@ -81,17 +81,17 @@ def _ajukan_pengisian_saldo(username):
     simpan_database()
 
     print(
-        f"✅ Pengajuan pengisian saldo sebesar {format_rupiah(nominal)} "
-        f"(ID: {pengajuan_baru['id']}) berhasil dikirim!"
+        f"✅ Pengajuan Pengisian Saldo Sebesar {format_rupiah(nominal)} "
+        f"(ID: {pengajuan_baru['id']}) Berhasil Dikirim!"
     )
-    print("ℹ️ Saldo akan bertambah setelah pengajuan disetujui oleh Admin.")
+    print("ℹ️ Saldo Akan Bertambah Setelah Pengajuan Disetujui oleh Admin.")
     bersihkan_layar_dengan_jeda(4.0)
 
-def _lihat_pengajuan_saldo_saya(username):
+def lihat_pengajuan_saldo_saya(username):
     bersihkan_layar()
     riwayat_saya = [item for item in pengajuan_saldo if item.get("username") == username]
     if not riwayat_saya:
-        print("\nAnda belum pernah mengajukan pengisian saldo.")
+        print("\nAnda Belum Pernah Mengajukan Pengisian Saldo.")
         bersihkan_layar_dengan_jeda(2.5)
         return
 
@@ -113,14 +113,14 @@ def kelola_saldo_user(username):
     while True:
         bersihkan_layar()
         print(f"\n=== SALDO & TOP-UP ({username.upper()}) ===")
-        print(f"Saldo Aktif Anda : {format_rupiah(_ambil_saldo(username))}")
+        print(f"Saldo Aktif Anda : {format_rupiah(ambil_saldo(username))}")
         menu_saldo_user(username)
 
         pilihan = input("Silahkan Pilih Opsi Menu (1-3) : ").strip()
         if pilihan == "1":
-            _ajukan_pengisian_saldo(username)
+            ajukan_pengisian_saldo(username)
         elif pilihan == "2":
-            _lihat_pengajuan_saldo_saya(username)
+            lihat_pengajuan_saldo_saya(username)
         elif pilihan == "3":
             bersihkan_layar_dengan_jeda(1.2)
             break
@@ -128,7 +128,7 @@ def kelola_saldo_user(username):
             print("❗ Opsi Menu yang Dimasukkan Tidak Valid/Terdeteksi")
             bersihkan_layar_dengan_jeda(1.5)
 
-def _input_nama_produk():
+def input_nama_produk():
     MIN_LEN = 3
     MAX_LEN = 25
     
@@ -141,19 +141,19 @@ def _input_nama_produk():
         ],
     )
     
-    nama_p = input(f"Nama Produk (hanya huruf/spasi, {MIN_LEN}-{MAX_LEN} karakter): ").strip()
+    nama_p = input(f"Nama Produk (Hanya Huruf/Spasi, {MIN_LEN}-{MAX_LEN} Karakter): ").strip()
 
     if not (MIN_LEN <= len(nama_p) <= MAX_LEN):
-        print(f"❗ Nama produk harus memiliki panjang antara {MIN_LEN} hingga {MAX_LEN} karakter.")
+        print(f"❗ Nama Produk Harus Memiliki Panjang Antara {MIN_LEN} hingga {MAX_LEN} Karakter.")
         return None
 
     if not re.match(r"^[A-Za-z\s]+$", nama_p):
-        print("❗ Nama produk hanya boleh mengandung huruf dan spasi (tidak boleh ada angka atau simbol).")
+        print("❗ Nama Produk Hanya Boleh Mengandung Huruf dan Spasi (Tidak Boleh Ada Angka atau Simbol).")
         return None
 
     return nama_p
 
-def _pilih_tipe_produk():
+def pilih_tipe_produk():
     while True:
         bersihkan_layar()
         print("\n=== PILIH TIPE / KATEGORI PRODUK ===")
@@ -161,14 +161,14 @@ def _pilih_tipe_produk():
         cetak_tabel(["No", "Tipe / Kategori Produk"], rows_tipe)
 
         try:
-            pilihan_tipe = int(input(f"Masukkan nomor tipe produk (1-{len(LIST_TIPE)}) : ").strip())
+            pilihan_tipe = int(input(f"Masukkan Nomor Tipe Produk (1-{len(LIST_TIPE)}) : ").strip())
         except ValueError:
-            print("❗ Input harus berupa angka bulat! Silakan pilih dari tabel kategori.")
+            print("❗ Input Harus Berupa Angka Bulat! Silahkan Pilih dari Tabel Kategori.")
             bersihkan_layar_dengan_jeda(1.8)
             continue
 
         if not (1 <= pilihan_tipe <= len(LIST_TIPE)):
-            print(f"❗ Pilihan tidak valid! Masukkan nomor antara 1 hingga {len(LIST_TIPE)}.")
+            print(f"❗ Pilihan Tidak Valid! Masukkan Nomor Antara 1 Hingga {len(LIST_TIPE)}.")
             bersihkan_layar_dengan_jeda(1.8)
             continue
 
@@ -181,24 +181,24 @@ def _pilih_tipe_produk():
                 cetak_tabel(
                     ["Ketentuan", "Aturan Input"],
                     [
-                        ["Karakter", "Hanya huruf (A-Z / a-z) dan spasi"],
-                        ["Larangan", "Tidak boleh kosong, angka, atau simbol"],
+                        ["Karakter", "Hanya Huruf (A-Z / a-z) dan Spasi"],
+                        ["Larangan", "Tidak Boleh Kosong, Angka, atau Simbol"],
                     ],
                 )
                 kategori_kustom = input(
-                    "Masukkan nama kategori produk lainnya (atau ketik 'kembali' untuk pilih ulang) : "
+                    "Masukkan Nama Kategori Produk Lainnya (atau Ketik 'kembali' untuk Pilih Ulang) : "
                 ).strip()
 
                 if kategori_kustom.lower() == "kembali":
                     break
 
                 if not kategori_kustom:
-                    print("❗ Kategori produk tidak boleh kosong.")
+                    print("❗ Kategori Produk Tidak Boleh Kosong.")
                     bersihkan_layar_dengan_jeda(1.8)
                     continue
 
                 if not re.fullmatch(r"[A-Za-z\s]+", kategori_kustom):
-                    print("❗ Kategori produk hanya boleh menggunakan huruf dan spasi (tanpa angka/simbol).")
+                    print("❗ Kategori Produk Hanya Boleh Menggunakan Huruf dan Spasi (Tanpa Angka/Simbol).")
                     bersihkan_layar_dengan_jeda(1.8)
                     continue
 
@@ -212,27 +212,27 @@ def mulai_jual(username):
     print("\n=== TAMBAH PRODUK BARU ===")
     id_baru = generate_id_produk(daftar_produk)
     if not id_baru:
-        print("❗ Kapasitas ID produk (K001–K999) sudah penuh!")
+        print("❗ Kapasitas ID Produk (K001–K999) Telah Penuh!")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
     print(f"ID Produk Otomatis : {id_baru}")
     print(f"Nama Penjual       : {username}")
 
-    nama_p = _input_nama_produk()
+    nama_p = input_nama_produk()
     if nama_p is None:
-        print("❗ Proses jual produk dihentikan.")
+        print("❗ Proses Jual Produk Dihentikan.")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
-    tipe_p = _pilih_tipe_produk()
+    tipe_p = pilih_tipe_produk()
 
     cetak_ketentuan(
         "--- KETENTUAN STOK & HARGA ---",
         [
-            ["Tipe Data", "Angka bulat (integer)"],
+            ["Tipe Data", "Angka Bulat (Integer)"],
             ["Jumlah Stok", "Minimal 0"],
-            ["Harga Satuan (Rp)", "Harus lebih dari Rp 0"],
+            ["Harga Satuan (Rp)", "Harus Lebih dari Rp 0"],
         ],
     )
     
@@ -240,12 +240,12 @@ def mulai_jual(username):
         stok_p = int(input("Jumlah Stok : "))
         harga_p = int(input("Harga Satuan (Rp) : "))
     except ValueError:
-        print("❗ Stok dan Harga harus berupa angka!")
+        print("❗ Stok dan Harga Harus Berupa Angka!")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
     if stok_p < 0 or harga_p <= 0:
-        print("❗ Stok minimal 0 dan Harga harus lebih dari 0!")
+        print("❗ Stok Minimal 0 dan Harga Harus Lebih dari 0!")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
@@ -260,16 +260,16 @@ def mulai_jual(username):
         "Deskripsi": desk_p,
     }
     simpan_database()
-    print(f"✅ Berhasil menambahkan produk '{nama_p}' (ID: {id_baru}) oleh penjual '{username}' ke katalog!")
+    print(f"✅ Berhasil Menambahkan Produk '{nama_p}' (ID: {id_baru}) oleh Penjual '{username}' ke Katalog!")
     bersihkan_layar_dengan_jeda(1.8)
 
-def _tampilkan_produk_milik_user(username):
+def tampilkan_produk_milik_user(username):
     produk_saya = {
         k_id: p for k_id, p in daftar_produk.items()
         if p.get("Penjual") == username
     }
     if not produk_saya:
-        print(f"\nAnda belum memiliki produk yang dijual atas akun '{username}'.")
+        print(f"\n❗ Anda Belum Memiliki Produk yang Dijual atas Akun '{username}'.")
         return {}
 
     print(f"\n=== PRODUK MILIK {username.upper()} ===")
@@ -281,56 +281,56 @@ def _tampilkan_produk_milik_user(username):
     cetak_tabel(field_names, rows)
     return produk_saya
 
-def _ubah_produk_milik_user(username):
+def ubah_produk_milik_user(username):
     bersihkan_layar()
-    produk_saya = _tampilkan_produk_milik_user(username)
+    produk_saya = tampilkan_produk_milik_user(username)
     if not produk_saya:
         input("\nTekan Enter untuk kembali ke Menu User...")
         return
 
-    target_id = input("\nMasukkan ID Produk milik Anda yang ingin diubah : ").strip().upper()
+    target_id = input("\nMasukkan ID Produk Milik Anda yang Ingin Diubah : ").strip().upper()
     if not target_id:
         return
 
     if target_id not in daftar_produk:
-        print("❗ ID Produk tidak ditemukan di katalog.")
+        print("❗ ID Produk Tidak Ditemukan di Katalog.")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
     if daftar_produk[target_id].get("Penjual") != username:
         print(
-            f"❗ Akses ditolak! Produk '{target_id}' dijual oleh '{daftar_produk[target_id].get('Penjual', '-')}', "
-            f"bukan oleh '{username}'."
+            f"❗ Akses Ditolak! Produk '{target_id}' Dijual oleh '{daftar_produk[target_id].get('Penjual', '-')}', "
+            f"Bukan oleh '{username}'."
         )
         bersihkan_layar_dengan_jeda(2.5)
         return
 
     produk = daftar_produk[target_id]
-    print(f"\nMengubah produk '{produk['Nama']}' ({target_id}). Tekan Enter jika tidak ingin mengubah field.")
+    print(f"\nMengubah Produk '{produk['Nama']}' ({target_id}). Tekan Enter Jika Tidak Ingin Mengubah Field.")
 
     nama_baru = input(f"Nama Produk baru [{produk['Nama']}] : ").strip()
     if nama_baru:
         if not (3 <= len(nama_baru) <= 25) or not re.match(r"^[A-Za-z\s]+$", nama_baru):
-            print("❗ Nama produk harus 3-25 karakter dan hanya berisi huruf/spasi. Perubahan nama dibatalkan.")
+            print("❗ Nama Produk Harus 3-25 Karakter dan Hanya Berisi Huruf/Spasi. Perubahan Nama Dibatalkan.")
             bersihkan_layar_dengan_jeda(3.0)
         else:
             produk["Nama"] = nama_baru
 
-    ubah_tipe = input(f"Ubah tipe produk [{produk['Tipe']}]? (y/n) : ").strip().lower()
+    ubah_tipe = input(f"Ubah Tipe Produk [{produk['Tipe']}]? (y/n) : ").strip().lower()
     if ubah_tipe == "y":
-        produk["Tipe"] = _pilih_tipe_produk()
+        produk["Tipe"] = pilih_tipe_produk()
 
-    stok_input = input(f"Jumlah Stok baru [{produk['Stok']}] : ").strip()
+    stok_input = input(f"Jumlah Stok Baru [{produk['Stok']}] : ").strip()
     if stok_input:
         try:
             stok_baru = int(stok_input)
             if stok_baru < 0:
-                print("❗ Stok minimal 0. Perubahan stok dibatalkan.")
+                print("❗ Stok Minimal 0. Perubahan Stok Dibatalkan.")
                 bersihkan_layar_dengan_jeda(2.5)
             else:
                 produk["Stok"] = stok_baru
         except ValueError:
-            print("❗ Stok harus berupa angka. Perubahan stok dibatalkan.")
+            print("❗ Stok Harus Berupa Angka. Perubahan Stok Dibatalkan.")
             bersihkan_layar_dengan_jeda(2.5)
 
     harga_input = input(f"Harga Satuan baru [{produk['Harga']}] : ").strip()
@@ -338,12 +338,12 @@ def _ubah_produk_milik_user(username):
         try:
             harga_baru = int(harga_input)
             if harga_baru <= 0:
-                print("❗ Harga harus lebih dari 0. Perubahan harga dibatalkan.")
+                print("❗ Harga Harus Lebih dari 0. Perubahan Harga Dibatalkan.")
                 bersihkan_layar_dengan_jeda(2.5)
             else:
                 produk["Harga"] = harga_baru
         except ValueError:
-            print("❗ Harga harus berupa angka. Perubahan harga dibatalkan.")
+            print("❗ Harga Harus Berupa Angka. Perubahan Harga Dibatalkan.")
             bersihkan_layar_dengan_jeda(2.5)
 
     desk_input = input(f"Deskripsi baru [{produk['Deskripsi']}] : ").strip()
@@ -351,51 +351,51 @@ def _ubah_produk_milik_user(username):
         produk["Deskripsi"] = desk_input
 
     simpan_database()
-    print(f"✅ Perubahan pada produk '{target_id}' berhasil disimpan!")
+    print(f"✅ Perubahan Pada Produk '{target_id}' Berhasil Disimpan!")
     bersihkan_layar_dengan_jeda(1.8)
 
-def _hapus_produk_milik_user(username):
+def hapus_produk_milik_user(username):
     bersihkan_layar()
-    produk_saya = _tampilkan_produk_milik_user(username)
+    produk_saya = tampilkan_produk_milik_user(username)
     if not produk_saya:
         bersihkan_layar_dengan_jeda(1.5)
         return True
 
-    target_id = input("\nMasukkan ID Produk milik Anda yang ingin dihapus : ").strip().upper()
+    target_id = input("\nMasukkan ID Produk Milik Anda yang Ingin Dihapus : ").strip().upper()
     if not target_id:
         return False
 
     if target_id not in daftar_produk:
-        print("❗ ID Produk tidak ditemukan di katalog.")
+        print("❗ ID Produk Tidak Ditemukan di Katalog.")
         bersihkan_layar_dengan_jeda(1.8)
         return False
 
     if daftar_produk[target_id].get("Penjual") != username:
         print(
-            f"❗ Akses ditolak! Produk '{target_id}' dijual oleh '{daftar_produk[target_id].get('Penjual', '-')}', "
-            f"bukan oleh '{username}'."
+            f"❗ Akses Ditolak! Produk '{target_id}' Dijual oleh '{daftar_produk[target_id].get('Penjual', '-')}', "
+            f"Bukan oleh '{username}'."
         )
         bersihkan_layar_dengan_jeda(3.0)
         return False
 
-    konfirmasi = input(f"Yakin ingin menghapus produk '{daftar_produk[target_id]['Nama']}' ({target_id})? (y/n) : ").strip().lower()
+    konfirmasi = input(f"Yakin Ingin Menghapus Produk '{daftar_produk[target_id]['Nama']}' ({target_id})? (y/n) : ").strip().lower()
     if konfirmasi == "y":
         del daftar_produk[target_id]
         for cart in keranjang.values():
             cart.pop(target_id, None)
         simpan_database()
-        print(f"✅ Produk '{target_id}' berhasil dihapus dari katalog.")
+        print(f"✅ Produk '{target_id}' Berhasil Dihapus dari Katalog.")
         bersihkan_layar_dengan_jeda(1.8)
 
         sisa_produk = any(
             p.get("Penjual") == username for p in daftar_produk.values()
         )
         if not sisa_produk:
-            print(f"❗ Sudah tidak ada lagi produk yang dijual di akun '{username}'.")
+            print(f"❗ Sudah Tidak Ada Lagi Produk yang Dijual di Akun '{username}'.")
             bersihkan_layar_dengan_jeda(1.8)
             return True
     else:
-        print("Penghapusan produk dibatalkan.")
+        print("❗ Penghapusan Produk Dibatalkan.")
         bersihkan_layar_dengan_jeda(1.5)
 
     return False
@@ -407,21 +407,21 @@ def kelola_produk_saya(username):
     }
 
     if not produk_saya:
-        print(f"\n❗ Belum ada produk yang dijual di akun '{username}'.")
+        print(f"\n❗ Belum Ada Produk yang Dijual di Akun '{username}'.")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
     while True:
         bersihkan_layar()
         print(f"\n=== KELOLA PRODUK SAYA ({username.upper()}) ===")
-        _tampilkan_produk_milik_user(username)
+        tampilkan_produk_milik_user(username)
         menu_kelola_produk_saya(username)
 
         pilihan = input("Silahkan Pilih Opsi Menu (1-3) : ").strip()
         if pilihan == "1":
-            _ubah_produk_milik_user(username)
+            ubah_produk_milik_user(username)
         elif pilihan == "2":
-            if _hapus_produk_milik_user(username):
+            if hapus_produk_milik_user(username):
                 break
         elif pilihan == "3":
             bersihkan_layar_dengan_jeda(1.2)
@@ -450,12 +450,12 @@ def tampilkan_isi_keranjang(username):
 
     cetak_tabel(field_names, rows)
     print(f"Total Keseluruhan : {format_rupiah(total_belanja)}")
-    print(f"Saldo Anda Saat Ini: {format_rupiah(_ambil_saldo(username))}")
+    print(f"Saldo Anda Saat Ini: {format_rupiah(ambil_saldo(username))}")
     return True
 
 def checkout_keranjang(username):
     if not keranjang.get(username):
-        print("\nKeranjang belanja Anda masih kosong. Tidak ada yang bisa di-checkout.")
+        print("\n❗ Keranjang Belanja Anda Masih Kosong. Tidak Ada yang Bisa di-Checkout.")
         bersihkan_layar_dengan_jeda(1.8)
         return False
 
@@ -466,27 +466,34 @@ def checkout_keranjang(username):
         if k_id in daftar_produk
     )
 
-    opsi_cart = input("\nIngin melakukan Checkout / Proses Pesanan? (y/n) : ").strip().lower()
+    opsi_cart = input("\nIngin Melakukan Checkout / Proses Pesanan? (y/n) : ").strip().lower()
     if opsi_cart == "y":
         for k_id, jumlah in keranjang[username].items():
             if k_id not in daftar_produk:
-                print(f"❗ Produk dengan ID '{k_id}' sudah tidak tersedia di katalog.")
+                print(f"❗ Produk dengan ID '{k_id}' Sudah Tidak Tersedia di Katalog.")
                 bersihkan_layar_dengan_jeda(1.8)
                 return False
+            if daftar_produk[k_id].get("Penjual") == username:
+                print(
+                    f"❗ Checkout Dibatalkan: Produk '{daftar_produk[k_id]['Nama']}' ({k_id}) "
+                    f"adalah Produk Milik Anda Sendiri. Hapus Item Tersebut dari Keranjang Terlebih Dahulu."
+                )
+                bersihkan_layar_dengan_jeda(2.2)
+                return False
             if jumlah > daftar_produk[k_id]["Stok"]:
-                print(f"❗ Stok produk '{daftar_produk[k_id]['Nama']}' tidak mencukupi untuk checkout.")
+                print(f"❗ Stok Produk '{daftar_produk[k_id]['Nama']}' Tidak Mencukupi untuk Checkout.")
                 bersihkan_layar_dengan_jeda(1.8)
                 return False
 
-        saldo_saat_ini = _ambil_saldo(username)
+        saldo_saat_ini = ambil_saldo(username)
         if saldo_saat_ini < total_belanja:
             kekurangan = total_belanja - saldo_saat_ini
             print(
-                f"\n❌ ERROR: Saldo Anda tidak cukup untuk melakukan checkout!\n"
+                f"\n❌ ERROR: Saldo Anda Tidak Cukup untuk Melakukan Checkout!\n"
                 f"   Total Belanja : {format_rupiah(total_belanja)}\n"
                 f"   Saldo Anda    : {format_rupiah(saldo_saat_ini)}\n"
                 f"   Kekurangan    : {format_rupiah(kekurangan)}\n"
-                f"   Silakan ajukan pengisian saldo terlebih dahulu dan tunggu persetujuan Admin."
+                f"   Silakan Ajukan Pengisian Saldo Terlebih Dahulu dan Tunggu Persetujuan Admin."
             )
             bersihkan_layar_dengan_jeda(2.5)
             return False
@@ -499,7 +506,7 @@ def checkout_keranjang(username):
 
         saldo_user[username] = saldo_saat_ini - total_belanja
 
-        id_trx = _generate_id_transaksi()
+        id_trx = generate_id_transaksi()
         waktu_trx = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
         riwayat_pesanan.setdefault(username, [])
@@ -512,18 +519,18 @@ def checkout_keranjang(username):
 
         keranjang[username] = {}
         simpan_database()
-        print("\n✅ Checkout Berhasil! Saldo telah dipotong, stok diperbarui, dan pesanan sedang diproses.")
+        print("\n✅ Checkout Berhasil! Saldo Telah Dipotong, Stok Diperbarui, dan Pesanan Sedang Diproses.")
         cetak_struk(username, items_struk, total_belanja, saldo=saldo_user[username])
         input("Tekan Enter untuk Kembali ke Menu User...")
         return True
     else:
-        print("Checkout dibatalkan.")
+        print("❗ Checkout Dibatalkan.")
         bersihkan_layar_dengan_jeda(1.5)
         return False
 
 def hapus_keranjang(username):
     if not keranjang.get(username):
-        print("\nKeranjang belanja Anda masih kosong.")
+        print("\n❗ Keranjang Belanja Anda Masih Kosong.")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
@@ -545,16 +552,16 @@ def hapus_keranjang(username):
             bersihkan_layar()
             tampilkan_isi_keranjang(username)
 
-            hapus_id = input("\nMasukkan ID Produk yang ingin dihapus : ").strip().upper()
+            hapus_id = input("\nMasukkan ID Produk yang Ingin Dihapus : ").strip().upper()
             if hapus_id in keranjang[username]:
                 nama_produk = daftar_produk.get(hapus_id, {}).get("Nama", hapus_id)
                 del keranjang[username][hapus_id]
                 simpan_database()
-                print(f"\n✅ Berhasil menghapus produk '{nama_produk}' (ID: {hapus_id}) dari keranjang!")
+                print(f"\n✅ Berhasil Menghapus Produk '{nama_produk}' (ID: {hapus_id}) dari Keranjang!")
                 bersihkan_layar_dengan_jeda(1.8)
 
                 if not keranjang[username]:
-                    print("Keranjang Anda sekarang sudah kosong.")
+                    print("❗ Keranjang Anda Sekarang Sudah Kosong.")
                     bersihkan_layar_dengan_jeda(1.5)
                     break
             else:
@@ -582,7 +589,9 @@ def hapus_keranjang(username):
 
 def _tambah_produk_ke_keranjang(username):
     while True:
-        beli_id = input("\nMasukkan ID Produk yang ingin dibeli (kosongkan lalu Enter untuk ke menu keranjang) : ").strip().upper()
+        beli_id = input(
+            "\nMasukkan ID Produk yang ingin dibeli (kosongkan lalu Enter untuk ke menu keranjang) : "
+        ).strip().upper()
         if not beli_id:
             break
 
@@ -590,8 +599,16 @@ def _tambah_produk_ke_keranjang(username):
             print("❗ ID Produk tidak ditemukan di katalog.")
             continue
 
+        produk = daftar_produk[beli_id]
+        if produk.get("Penjual") == username:
+            print(
+                f"❗ Anda tidak dapat memasukkan produk '{produk['Nama']}' ({beli_id}) "
+                f"ke keranjang karena produk ini dijual oleh akun Anda sendiri."
+            )
+            continue
+
         try:
-            jml = int(input(f"Masukkan jumlah '{daftar_produk[beli_id]['Nama']}' yang ingin dibeli : "))
+            jml = int(input(f"Masukkan jumlah '{produk['Nama']}' yang ingin dibeli : "))
         except ValueError:
             print("❗ Jumlah harus berupa angka!")
             continue
@@ -599,16 +616,16 @@ def _tambah_produk_ke_keranjang(username):
         if jml <= 0:
             print("❗ Jumlah beli minimal 1.")
             continue
-        elif jml > daftar_produk[beli_id]["Stok"]:
-            print(f"❗ Stok tidak mencukupi! Sisa stok saat ini: {daftar_produk[beli_id]['Stok']}")
+        elif jml > produk["Stok"]:
+            print(f"❗ Stok tidak mencukupi! Sisa stok saat ini: {produk['Stok']}")
             continue
 
         keranjang.setdefault(username, {})
         keranjang[username][beli_id] = keranjang[username].get(beli_id, 0) + jml
         simpan_database()
-        print(f"✅ Berhasil menambahkan {jml} pcs '{daftar_produk[beli_id]['Nama']}' ke keranjang belanja!")
+        print(f"✅ Berhasil menambahkan {jml} pcs '{produk['Nama']}' ke keranjang belanja!")
 
-def _tampilkan_katalog():
+def tampilkan_katalog():
     print("\n=== KATALOG PRODUK E-COMMERCE ===")
     field_names = ["ID", "Penjual", "Nama Produk", "Harga", "Stok", "Tipe", "Deskripsi"]
     rows = [
@@ -659,7 +676,7 @@ def lihat_katalog_dan_beli(username):
         print("\n❗ Katalog produk masih kosong! Belum ada barang yang tersedia.")
         bersihkan_layar_dengan_jeda(3.0)
         return
-    _tampilkan_katalog()
+    tampilkan_katalog()
     _tambah_produk_ke_keranjang(username)
     kelola_keranjang_dan_checkout(username, lewati_bersihkan_awal=True)
 
@@ -683,7 +700,7 @@ def tampilkan_menu_user(username):
     while True:
         bersihkan_layar()
         print(f"\n=== MENU AKSES USER ({username}) ===")
-        print(f"Saldo Anda : {format_rupiah(_ambil_saldo(username))}")
+        print(f"Saldo Anda : {format_rupiah(ambil_saldo(username))}")
         menu_user(username)
 
         pilihan_user = input("Silahkan Pilih Opsi Menu (1-6) : ").strip()

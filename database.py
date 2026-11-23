@@ -8,12 +8,8 @@ DATA_DEFAULT = {
     "akun_admin": {
         "Admin": "Pyc1#"
     },
-    "akun_user": {
-        "user": "User1#"
-    },
-    "saldo_user": {
-        "user": 0
-    },
+    "akun_user": {},
+    "saldo_user": {},
     "pengajuan_saldo": [],
     "daftar_produk": {},
     "keranjang": {},
