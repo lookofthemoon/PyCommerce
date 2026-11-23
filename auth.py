@@ -6,6 +6,7 @@ from utils import (
     validasi_username,
     validasi_password,
     bersihkan_layar_dengan_jeda,
+    cetak_ketentuan,
 )
 
 
@@ -52,9 +53,23 @@ def login():
 
 def registrasi():
     print("\n=== REGISTRASI AKUN USER BARU ===")
-    print("Ketentuan Username : 4-8 karakter, hanya huruf (A-Z / a-z)")
-    print("Ketentuan Password : 4-8 karakter, wajib ada huruf besar, huruf kecil, angka, dan simbol")
-
+    cetak_ketentuan(
+        "--- KETENTUAN USERNAME ---",
+        [
+            ["Panjang Karakter", "4 - 8 karakter"],
+            ["Jenis Karakter", "Hanya huruf (A-Z / a-z)"],
+        ]
+    )
+    cetak_ketentuan(
+        "--- KETENTUAN PASSWORD ---",
+        [
+            ["Panjang Karakter", "4 - 8 karakter"],
+            ["Huruf Kapital", "Wajib minimal 1 huruf besar (A-Z)"],
+            ["Huruf Kecil", "Wajib minimal 1 huruf kecil (a-z)"],
+            ["Angka", "Wajib minimal 1 angka (0-9)"],
+            ["Simbol", "Wajib minimal 1 simbol (contoh: !@#$%^&*)"],
+        ],
+    )
     try:
         user_baru = input_batal("Masukkan Username Baru : ").strip()
     except Batal:
@@ -84,5 +99,5 @@ def registrasi():
     akun_user[user_baru] = pass_baru
     saldo_user[user_baru] = 0
     simpan_database()
-    print(f"✅ Akun user '{user_baru}' berhasil didaftarkan! Silakan login.")
+    print(f"✅ Akun user '{user_baru}' berhasil didaftarkan! Silahkan login.")
     bersihkan_layar_dengan_jeda(1.8)

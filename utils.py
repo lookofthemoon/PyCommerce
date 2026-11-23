@@ -15,6 +15,20 @@ def cetak_tabel(field_names, data_rows):
     for row in data_rows:
         table.add_row(row)
     print(table)
+    
+def _generate_id_transaksi():
+    nomor_tertinggi = 0
+    for daftar_trx in riwayat_pesanan.values():
+        if not isinstance(daftar_trx, list):
+            continue
+        for pesanan in daftar_trx:
+            id_trx = str(pesanan.get("id_transaksi", ""))
+            match = re.fullmatch(r"TRX(\d{3})", id_trx)
+            if match:
+                angka = int(match.group(1))
+                if angka > nomor_tertinggi:
+                    nomor_tertinggi = angka
+    return f"TRX{nomor_tertinggi + 1:03d}"
 
 def generate_id_produk(produk_dict):
     nomor_tertinggi = 0
@@ -95,6 +109,11 @@ def validasi_password(password):
         return "Password harus memiliki minimal 1 simbol."
     return None
 
+def cetak_ketentuan(judul, daftar_aturan):
+    print(f"\n{judul}")
+    field_names = ["Ketentuan", "Aturan Input"]
+    cetak_tabel(field_names, daftar_aturan)
+    
 def menu_awal():
     field_names = ["No", "Menu Utama PyCommerce"]
     rows = [
@@ -110,7 +129,8 @@ def menu_admin(username):
         ["1", "Lihat Daftar Akun User"],
         ["2", "Hapus Akun dari Daftar Akun User"],
         ["3", "Kelola Pengajuan Isi Saldo User"],
-        ["4", "Keluar Dari Menu Akses Admin"],
+        ["4", "Pantau Riwayat Transaksi User"],
+        ["5", "Keluar Dari Menu Akses Admin"],
     ]
     cetak_tabel(field_names, rows)
 

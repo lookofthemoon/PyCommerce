@@ -6,6 +6,7 @@ from database import (
     keranjang,
     riwayat_pesanan,
     simpan_database,
+    daftar_produk,
 )
 from utils import (
     cetak_tabel,
@@ -14,6 +15,107 @@ from utils import (
     bersihkan_layar_dengan_jeda,
     format_rupiah,
 )
+
+def _kumpulkan_semua_transaksi(filter_username=None):
+    hasil = []
+    if not isinstance(riwayat_pesanan, dict):
+        return hasil
+
+    for pembeli, daftar_trx in riwayat_pesanan.items():
+        if filter_username and pembeli.lower() != filter_username.lower():
+            continue
+        if not isinstance(daftar_trx, list):
+            continue
+
+        for idx, pesanan in enumerate(daftar_trx, 1):
+            items_dict = pesanan.get("Item", {})
+            ringkasan_item = []
+            if isinstance(items_dict, dict):
+                for k_id, jml in items_dict.items():
+                    ringkasan_item.append(f"{k_id} (x{jml})")
+
+            hasil.append({
+                "id_transaksi": pesanan.get("id_transaksi", f"LEGACY-{idx:03d}"),
+                "pembeli": pembeli,
+                "waktu": pesanan.get("waktu", "-"),
+                "items_str": ", ".join(ringkasan_item) if ringkasan_item else "-",
+                "total": pesanan.get("Total", 0),
+            })
+    return hasil
+
+
+def _tampilkan_tabel_transaksi(daftar_trx, judul):
+    bersihkan_layar()
+    print(f"\n=== {judul} ===")
+
+    if not daftar_trx:
+        print("Belum ada data transaksi yang sesuai.")
+        bersihkan_layar_dengan_jeda(2.0)
+        return
+
+    field_names = ["ID Transaksi", "Pembeli", "Waktu", "Item (ID & Jumlah)", "Total"]
+    rows = [
+        [
+            trx["id_transaksi"],
+            trx["pembeli"],
+            trx["waktu"],
+            trx["items_str"],
+            format_rupiah(trx["total"]),
+        ]
+        for trx in daftar_trx
+    ]
+    cetak_tabel(field_names, rows)
+
+    total_omzet = sum(trx["total"] for trx in daftar_trx)
+    print(f"Jumlah Transaksi : {len(daftar_trx)}")
+    print(f"Total Nilai      : {format_rupiah(total_omzet)}")
+
+    input("\nTekan Enter untuk kembali...")
+
+
+def _pantau_transaksi_user():
+    while True:
+        bersihkan_layar()
+        print("\n=== PANTAU RIWAYAT TRANSAKSI USER ===")
+        cetak_tabel(
+            ["No", "Opsi Pemantauan Transaksi"],
+            [
+                ["1", "Lihat Semua Transaksi Seluruh User"],
+                ["2", "Filter Transaksi Berdasarkan Username"],
+                ["3", "Kembali ke Menu Admin"],
+            ],
+        )
+
+        opsi = input("Pilih opsi (1-3) : ").strip()
+        if opsi == "1":
+            semua_trx = _kumpulkan_semua_transaksi()
+            _tampilkan_tabel_transaksi(semua_trx, "SEMUA TRANSAKSI USER")
+        elif opsi == "2":
+            bersihkan_layar()
+            if not akun_user:
+                print("Tidak Ada Akun User yang Berhasil Dideteksi.")
+                bersihkan_layar_dengan_jeda(1.8)
+            else:
+                print("\nBerikut Adalah Daftar Akun yang Valid dan Aktif Sekarang : ")
+                field_names = ["No", "Username Akun User", "Saldo Aktif"]
+                rows_user = [
+                    [idx, user, format_rupiah(saldo_user.get(user, 0))]
+                    for idx, user in enumerate(akun_user.keys(), 1)
+                ]
+                cetak_tabel(field_names, rows_user)
+            target_user = input("Masukkan username user yang ingin dipantau : ").strip()
+            if not target_user:
+                print("❌ Username tidak boleh kosong.")
+                bersihkan_layar_dengan_jeda(1.5)
+                continue
+            trx_user = _kumpulkan_semua_transaksi(filter_username=target_user)
+            _tampilkan_tabel_transaksi(trx_user, f"TRANSAKSI USER: {target_user}")
+        elif opsi == "3":
+            bersihkan_layar_dengan_jeda(1.2)
+            break
+        else:
+            print("❌ Opsi pemantauan tidak valid!")
+            bersihkan_layar_dengan_jeda(1.5)
 
 def _kelola_pengajuan_saldo():
     while True:
@@ -44,9 +146,15 @@ def _kelola_pengajuan_saldo():
             bersihkan_layar_dengan_jeda(1.8)
             return
 
-        print("\n1. Terima Pengajuan Saldo")
-        print("2. Tolak Pengajuan Saldo")
-        print("3. Kembali ke Menu Admin")
+        print("\n=== PILIH AKSI PENGAJUAN SALDO ===")
+        cetak_tabel(
+            ["No", "Opsi Aksi Pengajuan Saldo"],
+            [
+                ["1", "Terima Pengajuan Saldo"],
+                ["2", "Tolak Pengajuan Saldo"],
+                ["3", "Kembali ke Menu Admin"],
+            ],
+        )
         aksi = input("Pilih aksi (1-3) : ").strip()
 
         if aksi in ("1", "2"):
@@ -112,7 +220,7 @@ def tampilkan_menu_admin(username="Admin"):
         print(f"\n=== MENU AKSES ADMIN ({username}) ===")
         menu_admin(username)
 
-        pilihan_admin = input("Silahkan Pilih Opsi Menu (1-4) : ").strip()
+        pilihan_admin = input("Silahkan Pilih Opsi Menu (1-5) : ").strip()
 
         if pilihan_admin == "1":
             bersihkan_layar()
@@ -127,9 +235,21 @@ def tampilkan_menu_admin(username="Admin"):
                     for idx, user in enumerate(akun_user.keys(), 1)
                 ]
                 cetak_tabel(field_names, rows_user)
-                bersihkan_layar_dengan_jeda(2.5)
+                input("\nTekan Enter untuk kembali ke Menu Admin...")
 
         elif pilihan_admin == "2":
+            bersihkan_layar()
+            if not akun_user:
+                print("Tidak Ada Akun User yang Berhasil Dideteksi.")
+                bersihkan_layar_dengan_jeda(1.8)
+            else:
+                print("\nBerikut Adalah Daftar Akun yang Valid dan Aktif Sekarang : ")
+                field_names = ["No", "Username Akun User", "Saldo Aktif"]
+                rows_user = [
+                    [idx, user, format_rupiah(saldo_user.get(user, 0))]
+                    for idx, user in enumerate(akun_user.keys(), 1)
+                ]
+                cetak_tabel(field_names, rows_user)
             hapus_akun = input("Silahkan Masukkan Nama Akun : ").strip()
             if hapus_akun in akun_user:
                 del akun_user[hapus_akun]
@@ -139,6 +259,14 @@ def tampilkan_menu_admin(username="Admin"):
                 pengajuan_saldo[:] = [
                     item for item in pengajuan_saldo if item.get("username") != hapus_akun
                 ]
+                produk_dihapus = [
+                    k_id for k_id, p in daftar_produk.items()
+                    if p.get("Penjual") == hapus_akun
+                ]
+                for k_id in produk_dihapus:
+                    del daftar_produk[k_id]
+                for cart in keranjang.values():
+                    cart.pop(k_id, None)
                 simpan_database()
                 print(f"✅ Berhasil Menghapus Akun Bernama '{hapus_akun}' dari Daftar Akun User!")
                 bersihkan_layar_dengan_jeda(1.8)
@@ -148,8 +276,11 @@ def tampilkan_menu_admin(username="Admin"):
 
         elif pilihan_admin == "3":
             _kelola_pengajuan_saldo()
-
+            
         elif pilihan_admin == "4":
+            _pantau_transaksi_user()
+
+        elif pilihan_admin == "5":
             print("✅ Berhasil Keluar dari Menu Akses Admin!")
             bersihkan_layar_dengan_jeda(1.2)
             break
