@@ -16,7 +16,7 @@ from utils import (
     format_rupiah,
 )
 
-def _kumpulkan_semua_transaksi(filter_username=None):
+def kumpulkan_semua_transaksi(filter_username=None):
     hasil = []
     if not isinstance(riwayat_pesanan, dict):
         return hasil
@@ -44,12 +44,12 @@ def _kumpulkan_semua_transaksi(filter_username=None):
     return hasil
 
 
-def _tampilkan_tabel_transaksi(daftar_trx, judul):
+def tampilkan_tabel_transaksi(daftar_trx, judul):
     bersihkan_layar()
     print(f"\n=== {judul} ===")
 
     if not daftar_trx:
-        print("Belum ada data transaksi yang sesuai.")
+        print("Belum Ada Data Transaksi yang Sesuai.")
         bersihkan_layar_dengan_jeda(2.0)
         return
 
@@ -73,7 +73,7 @@ def _tampilkan_tabel_transaksi(daftar_trx, judul):
     input("\nTekan Enter untuk kembali...")
 
 
-def _pantau_transaksi_user():
+def pantau_transaksi_user():
     while True:
         bersihkan_layar()
         print("\n=== PANTAU RIWAYAT TRANSAKSI USER ===")
@@ -88,8 +88,8 @@ def _pantau_transaksi_user():
 
         opsi = input("Pilih opsi (1-3) : ").strip()
         if opsi == "1":
-            semua_trx = _kumpulkan_semua_transaksi()
-            _tampilkan_tabel_transaksi(semua_trx, "SEMUA TRANSAKSI USER")
+            semua_trx = kumpulkan_semua_transaksi()
+            tampilkan_tabel_transaksi(semua_trx, "SEMUA TRANSAKSI USER")
         elif opsi == "2":
             bersihkan_layar()
             if not akun_user:
@@ -103,27 +103,27 @@ def _pantau_transaksi_user():
                     for idx, user in enumerate(akun_user.keys(), 1)
                 ]
                 cetak_tabel(field_names, rows_user)
-            target_user = input("Masukkan username user yang ingin dipantau : ").strip()
+            target_user = input("Masukkan Username User yang Ingin Dipantau : ").strip()
             if not target_user:
-                print("❌ Username tidak boleh kosong.")
+                print("❗ Username Tidak Boleh Kosong.")
                 bersihkan_layar_dengan_jeda(1.5)
                 continue
-            trx_user = _kumpulkan_semua_transaksi(filter_username=target_user)
-            _tampilkan_tabel_transaksi(trx_user, f"TRANSAKSI USER: {target_user}")
+            trx_user = kumpulkan_semua_transaksi(filter_username=target_user)
+            tampilkan_tabel_transaksi(trx_user, f"TRANSAKSI USER: {target_user}")
         elif opsi == "3":
             bersihkan_layar_dengan_jeda(1.2)
             break
         else:
-            print("❌ Opsi pemantauan tidak valid!")
+            print("❗ Opsi Pemantauan Tidak Valid!")
             bersihkan_layar_dengan_jeda(1.5)
 
-def _kelola_pengajuan_saldo():
+def kelola_pengajuan_saldo():
     while True:
         bersihkan_layar()
         print("\n=== KELOLA PENGAJUAN ISI SALDO USER ===")
 
         if not pengajuan_saldo:
-            print("Belum ada pengajuan pengisian saldo dari user.")
+            print("Belum Ada Pengajuan Pengisian Saldo dari User.")
             bersihkan_layar_dengan_jeda(1.8)
             return
 
@@ -142,8 +142,8 @@ def _kelola_pengajuan_saldo():
 
         menunggu = [item for item in pengajuan_saldo if item.get("status") == "Menunggu"]
         if not menunggu:
-            print("\nTidak ada pengajuan saldo berstatus 'Menunggu' yang perlu diproses.")
-            bersihkan_layar_dengan_jeda(1.8)
+            print("\nTidak Ada Pengajuan Saldo Berstatus 'Menunggu' yang Perlu Diproses.")
+            bersihkan_layar_dengan_jeda(3.0)
             return
 
         print("\n=== PILIH AKSI PENGAJUAN SALDO ===")
@@ -155,7 +155,7 @@ def _kelola_pengajuan_saldo():
                 ["3", "Kembali ke Menu Admin"],
             ],
         )
-        aksi = input("Pilih aksi (1-3) : ").strip()
+        aksi = input("Pilih Aksi (1-3) : ").strip()
 
         if aksi in ("1", "2"):
             target_id = input("Masukkan ID Pengajuan (contoh: TOP001) : ").strip().upper()
@@ -165,13 +165,13 @@ def _kelola_pengajuan_saldo():
             )
 
             if not pengajuan_terpilih:
-                print("❌ ID Pengajuan tidak ditemukan.")
+                print("❗ ID Pengajuan Tidak Ditemukan.")
                 bersihkan_layar_dengan_jeda(1.8)
                 continue
 
             if pengajuan_terpilih.get("status") != "Menunggu":
                 print(
-                    f"❌ Pengajuan '{target_id}' sudah diproses sebelumnya "
+                    f"❗ Pengajuan '{target_id}' Sudah Diproses Sebelumnya "
                     f"({pengajuan_terpilih.get('status')})."
                 )
                 bersihkan_layar_dengan_jeda(1.8)
@@ -184,7 +184,7 @@ def _kelola_pengajuan_saldo():
                 pengajuan_terpilih["status"] = "Ditolak"
                 pengajuan_terpilih["waktu_proses"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
                 simpan_database()
-                print(f"❌ Akun user '{user_target}' sudah tidak ada. Pengajuan otomatis ditolak.")
+                print(f"❗ Akun User '{user_target}' Sudah Tidak Valid/Aktif. Pengajuan Otomatis Ditolak.")
                 bersihkan_layar_dengan_jeda(2.0)
                 continue
 
@@ -194,7 +194,7 @@ def _kelola_pengajuan_saldo():
                 pengajuan_terpilih["waktu_proses"] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
                 simpan_database()
                 print(
-                    f"✅ Pengajuan '{target_id}' sebesar {format_rupiah(nominal)} untuk '{user_target}' DITERIMA! "
+                    f"✅ Pengajuan '{target_id}' Sebesar {format_rupiah(nominal)} untuk '{user_target}' DITERIMA! "
                     f"Saldo baru: {format_rupiah(saldo_user[user_target])}."
                 )
             else:
@@ -210,7 +210,7 @@ def _kelola_pengajuan_saldo():
             bersihkan_layar_dengan_jeda(1.2)
             break
         else:
-            print("❌ Opsi aksi tidak valid!")
+            print(" ❗ Opsi Aksi Tidak Valid!")
             bersihkan_layar_dengan_jeda(1.5)
 
 
@@ -225,7 +225,7 @@ def tampilkan_menu_admin(username="Admin"):
         if pilihan_admin == "1":
             bersihkan_layar()
             if not akun_user:
-                print("Tidak Ada Akun User yang Berhasil Dideteksi.")
+                print("❗ Tidak Ada Akun User yang Berhasil Dideteksi.")
                 bersihkan_layar_dengan_jeda(1.8)
             else:
                 print("\nBerikut Adalah Daftar Akun yang Valid dan Aktif Sekarang : ")
@@ -240,7 +240,7 @@ def tampilkan_menu_admin(username="Admin"):
         elif pilihan_admin == "2":
             bersihkan_layar()
             if not akun_user:
-                print("Tidak Ada Akun User yang Berhasil Dideteksi.")
+                print("❗ Tidak Ada Akun User yang Berhasil Dideteksi.")
                 bersihkan_layar_dengan_jeda(1.8)
             else:
                 print("\nBerikut Adalah Daftar Akun yang Valid dan Aktif Sekarang : ")
@@ -271,19 +271,19 @@ def tampilkan_menu_admin(username="Admin"):
                 print(f"✅ Berhasil Menghapus Akun Bernama '{hapus_akun}' dari Daftar Akun User!")
                 bersihkan_layar_dengan_jeda(1.8)
             else:
-                print("❌ Nama Akun yang Dimasukkan Tidak Valid/Terdeteksi")
+                print("❗ Nama Akun yang Dimasukkan Tidak Valid/Terdeteksi")
                 bersihkan_layar_dengan_jeda(1.8)
 
         elif pilihan_admin == "3":
-            _kelola_pengajuan_saldo()
+            kelola_pengajuan_saldo()
             
         elif pilihan_admin == "4":
-            _pantau_transaksi_user()
+            pantau_transaksi_user()
 
         elif pilihan_admin == "5":
             print("✅ Berhasil Keluar dari Menu Akses Admin!")
             bersihkan_layar_dengan_jeda(1.2)
             break
         else:
-            print("❌ Opsi Menu yang Dimasukkan Tidak Valid atau Tidak Terdeteksi!")
+            print("❗ Opsi Menu yang Dimasukkan Tidak Valid atau Tidak Terdeteksi!")
             bersihkan_layar_dengan_jeda(1.5)

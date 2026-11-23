@@ -18,7 +18,7 @@ def main():
             username, role, gagal_login = login()
 
             if gagal_login:
-                print("\nBatas percobaan login telah habis. Program berhenti.")
+                print("\n❗ Batas Percobaan Login Telah Habis. Program Berhenti.")
                 bersihkan_layar_dengan_jeda(1.5)
                 break
 
@@ -34,12 +34,12 @@ def main():
 
         elif pilihan_awal == "3":
             bersihkan_layar()
-            print("\nBerhasil Keluar dari Program!")
-            print("Terima kasih telah menggunakan PyCommerce!")
+            print("\n✅ Berhasil Keluar dari Program!")
+            print("Terima Kasih Telah Menggunakan PyCommerce!")
             break
 
         else:
-            print("\n❌ Opsi Menu yang Dimasukkan Tidak Valid!")
+            print("\n❗ Opsi Menu yang Dimasukkan Tidak Valid!")
             bersihkan_layar_dengan_jeda(1.5)
 
 if __name__ == "__main__":

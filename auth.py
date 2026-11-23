@@ -17,36 +17,36 @@ def login():
             username = input("Masukkan Username Akun : ").strip()
             password = ambil_password("Masukkan Password Akun : ")
         except Batal:
-            print("Login dibatalkan.")
+            print("❗ Login Dibatalkan.")
             bersihkan_layar_dengan_jeda(1.5)
             return None, None, False
 
         if password.strip().lower() == "batal":
-            print("Login dibatalkan.")
+            print("❗ Login Dibatalkan.")
             bersihkan_layar_dengan_jeda(1.5)
             return None, None, False
 
         if username in akun_admin and akun_admin[username] == password:
-            print("\nLogin berhasil!")
+            print("\n✅ Login Berhasil!")
             print("Nama akun :", username)
             print("Role      : Admin")
             bersihkan_layar_dengan_jeda(1.5)
             return username, "admin", False
 
         elif username in akun_user and akun_user[username] == password:
-            print("\nLogin berhasil!")
+            print("\n✅ Login Berhasil!")
             print("Nama akun :", username)
             print("Role      : User")
             bersihkan_layar_dengan_jeda(1.5)
             return username, "user", False
 
         else:
-            print("\n❌ Username atau Password yang Anda Masukkan Salah!")
-            print("Sisa percobaan login :", 2 - percobaan)
+            print("\n❗ Username atau Password yang Anda Masukkan Salah!")
+            print("Sisa Percobaan Login :", 2 - percobaan)
             if percobaan < 2:
                 bersihkan_layar_dengan_jeda(1.8)
 
-    print("\n❌ Anda gagal login sebanyak 3 kali. Program dihentikan.")
+    print("\n❗ Anda Gagal Login Sebanyak 3 Kali. Program Dihentikan.")
     bersihkan_layar_dengan_jeda(1.8)
     return None, None, True
 
@@ -56,35 +56,35 @@ def registrasi():
     cetak_ketentuan(
         "--- KETENTUAN USERNAME ---",
         [
-            ["Panjang Karakter", "4 - 8 karakter"],
-            ["Jenis Karakter", "Hanya huruf (A-Z / a-z)"],
+            ["Panjang Karakter", "4 - 8 Karakter"],
+            ["Jenis Karakter", "Hanya Huruf (A-Z / a-z)"],
         ]
     )
     cetak_ketentuan(
         "--- KETENTUAN PASSWORD ---",
         [
-            ["Panjang Karakter", "4 - 8 karakter"],
-            ["Huruf Kapital", "Wajib minimal 1 huruf besar (A-Z)"],
-            ["Huruf Kecil", "Wajib minimal 1 huruf kecil (a-z)"],
-            ["Angka", "Wajib minimal 1 angka (0-9)"],
-            ["Simbol", "Wajib minimal 1 simbol (contoh: !@#$%^&*)"],
+            ["Panjang Karakter", "4 - 8 Karakter"],
+            ["Huruf Kapital", "Wajib Minimal 1 Huruf Besar (A-Z)"],
+            ["Huruf Kecil", "Wajib Minimal 1 Huruf Kecil (a-z)"],
+            ["Angka", "Wajib Minimal 1 Angka (0-9)"],
+            ["Simbol", "Wajib Minimal 1 Simbol (Contoh: !@#$%^&*)"],
         ],
     )
     try:
         user_baru = input_batal("Masukkan Username Baru : ").strip()
     except Batal:
-        print("Registrasi dibatalkan.")
+        print("❗ Registrasi Dibatalkan.")
         bersihkan_layar_dengan_jeda(1.5)
         return
 
     pesan_user = validasi_username(user_baru)
     if pesan_user:
-        print("❌", pesan_user)
+        print("❗", pesan_user)
         bersihkan_layar_dengan_jeda(1.8)
         return
 
     if user_baru in akun_user or user_baru in akun_admin:
-        print("❌ Username tersebut sudah terdaftar!")
+        print("❗ Username Tersebut Sudah Terdaftar!")
         bersihkan_layar_dengan_jeda(1.8)
         return
 
@@ -92,12 +92,12 @@ def registrasi():
     pesan_pass = validasi_password(pass_baru)
 
     if pesan_pass:
-        print("❌", pesan_pass)
+        print("❗", pesan_pass)
         bersihkan_layar_dengan_jeda(1.8)
         return
 
     akun_user[user_baru] = pass_baru
     saldo_user[user_baru] = 0
     simpan_database()
-    print(f"✅ Akun user '{user_baru}' berhasil didaftarkan! Silahkan login.")
+    print(f"✅ Akun user '{user_baru}' Berhasil Didaftarkan! Silahkan Login.")
     bersihkan_layar_dengan_jeda(1.8)

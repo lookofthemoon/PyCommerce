@@ -565,19 +565,19 @@ def hapus_keranjang(username):
                     bersihkan_layar_dengan_jeda(1.5)
                     break
             else:
-                print("❗ ID Produk tersebut tidak ditemukan di dalam keranjang belanja Anda.")
+                print("❗ ID Produk Tersebut Tidak Ditemukan di Dalam Keranjang Belanja Anda.")
                 bersihkan_layar_dengan_jeda(1.8)
 
         elif pilihan_hapus == "2":
-            konfirmasi = input("\nApakah Anda yakin ingin mengosongkan SELURUH isi keranjang? (y/n) : ").strip().lower()
+            konfirmasi = input("\nApakah Anda Yakin Ingin Mengosongkan SELURUH Isi Keranjang? (y/n) : ").strip().lower()
             if konfirmasi == "y":
                 keranjang[username] = {}
                 simpan_database()
-                print("\n✅ Berhasil mengosongkan seluruh keranjang belanja!")
+                print("\n✅ Berhasil Mengosongkan Seluruh Keranjang Belanja!")
                 bersihkan_layar_dengan_jeda(1.8)
                 break
             else:
-                print("Penghapusan keranjang dibatalkan.")
+                print("Penghapusan Keranjang Dibatalkan.")
                 bersihkan_layar_dengan_jeda(1.5)
 
         elif pilihan_hapus == "3":
@@ -587,43 +587,43 @@ def hapus_keranjang(username):
             print("❗ Opsi Menu yang Dimasukkan Tidak Valid/Terdeteksi")
             bersihkan_layar_dengan_jeda(1.5)
 
-def _tambah_produk_ke_keranjang(username):
+def tambah_produk_ke_keranjang(username):
     while True:
         beli_id = input(
-            "\nMasukkan ID Produk yang ingin dibeli (kosongkan lalu Enter untuk ke menu keranjang) : "
+            "\nMasukkan ID Produk yang Ingin Dibeli (Atau Enter untuk Lanjut ke Menu Keranjang) : "
         ).strip().upper()
         if not beli_id:
             break
 
         if beli_id not in daftar_produk:
-            print("❗ ID Produk tidak ditemukan di katalog.")
+            print("❗ ID Produk Tidak Ditemukan di Katalog.")
             continue
 
         produk = daftar_produk[beli_id]
         if produk.get("Penjual") == username:
             print(
-                f"❗ Anda tidak dapat memasukkan produk '{produk['Nama']}' ({beli_id}) "
-                f"ke keranjang karena produk ini dijual oleh akun Anda sendiri."
+                f"❗ Anda Tidak Dapat Memasukkan Produk '{produk['Nama']}' ({beli_id}) "
+                f"ke Keranjang Karena Produk Ini Dijual oleh Akun Anda Sendiri."
             )
             continue
 
         try:
-            jml = int(input(f"Masukkan jumlah '{produk['Nama']}' yang ingin dibeli : "))
+            jml = int(input(f"Masukkan Jumlah '{produk['Nama']}' yang Ingin Dibeli : "))
         except ValueError:
-            print("❗ Jumlah harus berupa angka!")
+            print("❗ Jumlah Harus Berupa Angka!")
             continue
 
         if jml <= 0:
-            print("❗ Jumlah beli minimal 1.")
+            print("❗ Jumlah Beli Minimal 1.")
             continue
         elif jml > produk["Stok"]:
-            print(f"❗ Stok tidak mencukupi! Sisa stok saat ini: {produk['Stok']}")
+            print(f"❗ Stok Tidak Mencukupi! Sisa Stok Saat Ini: {produk['Stok']}")
             continue
 
         keranjang.setdefault(username, {})
         keranjang[username][beli_id] = keranjang[username].get(beli_id, 0) + jml
         simpan_database()
-        print(f"✅ Berhasil menambahkan {jml} pcs '{produk['Nama']}' ke keranjang belanja!")
+        print(f"✅ Berhasil Menambahkan {jml} pcs '{produk['Nama']}' ke Keranjang Belanja!")
 
 def tampilkan_katalog():
     print("\n=== KATALOG PRODUK E-COMMERCE ===")
@@ -673,16 +673,16 @@ def kelola_keranjang_dan_checkout(username, lewati_bersihkan_awal=False):
 def lihat_katalog_dan_beli(username):
     bersihkan_layar()
     if not daftar_produk:
-        print("\n❗ Katalog produk masih kosong! Belum ada barang yang tersedia.")
+        print("\n❗ Katalog Produk Masih Kosong! Belum Ada Barang yang Tersedia.")
         bersihkan_layar_dengan_jeda(3.0)
         return
     tampilkan_katalog()
-    _tambah_produk_ke_keranjang(username)
+    tambah_produk_ke_keranjang(username)
     kelola_keranjang_dan_checkout(username, lewati_bersihkan_awal=True)
 
 def lihat_pesanan(username):
     if not riwayat_pesanan.get(username):
-        print("\nAnda belum memiliki riwayat pesanan.")
+        print("\n❗ Anda Belum Memiliki Riwayat Pesanan.")
         bersihkan_layar_dengan_jeda(1.8)
     else:
         print(f"\n=== RIWAYAT PESANAN SAYA ({username}) ===")
