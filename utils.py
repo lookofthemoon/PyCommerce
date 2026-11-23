@@ -87,26 +87,26 @@ def input_batal(prompt):
 
 def validasi_username(username):
     if len(username) < 4:
-        return "❗ Username Minimal 4 Karakter."
+        return "Username Minimal 4 Karakter."
     if len(username) > 8:
-        return "❗ Username Maksimal 8 Karakter."
+        return "Username Maksimal 8 Karakter."
     if not re.fullmatch(r"[A-Za-z]+", username):
         return "Username Hanya Boleh Menggunakan Huruf (Huruf Kapital atau Huruf Kecil)!"
     return None
 
 def validasi_password(password):
     if len(password) < 4:
-        return "❗ Password Minimal 4 Karakter."
+        return "Password Minimal 4 Karakter."
     if len(password) > 8:
-        return "❗ Password Maksimal 8 Karakter."
+        return "Password Maksimal 8 Karakter."
     if not re.search(r"[A-Z]", password):
-        return "❗ Password Harus Mengandung Minimal 1 Huruf Kapital."
+        return "Password Harus Mengandung Minimal 1 Huruf Kapital."
     if not re.search(r"[a-z]", password):
-        return "❗ Password Harus Mengandung Minimal 1 Huruf Kecil."
+        return "Password Harus Mengandung Minimal 1 Huruf Kecil."
     if not re.search(r"\d", password):
-        return "❗ Password Harus Mengandung Minimal 1 Angka."
+        return "Password Harus Mengandung Minimal 1 Angka."
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-        return "❗ Password Harus Memiliki Minimal 1 Simbol."
+        return "Password Harus Memiliki Minimal 1 Simbol."
     return None
 
 def cetak_ketentuan(judul, daftar_aturan):

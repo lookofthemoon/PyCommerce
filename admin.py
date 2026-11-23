@@ -72,7 +72,6 @@ def tampilkan_tabel_transaksi(daftar_trx, judul):
 
     input("\nTekan Enter untuk kembali...")
 
-
 def pantau_transaksi_user():
     while True:
         bersihkan_layar()
@@ -250,29 +249,29 @@ def tampilkan_menu_admin(username="Admin"):
                     for idx, user in enumerate(akun_user.keys(), 1)
                 ]
                 cetak_tabel(field_names, rows_user)
-            hapus_akun = input("Silahkan Masukkan Nama Akun : ").strip()
-            if hapus_akun in akun_user:
-                del akun_user[hapus_akun]
-                saldo_user.pop(hapus_akun, None)
-                keranjang.pop(hapus_akun, None)
-                riwayat_pesanan.pop(hapus_akun, None)
-                pengajuan_saldo[:] = [
-                    item for item in pengajuan_saldo if item.get("username") != hapus_akun
-                ]
-                produk_dihapus = [
-                    k_id for k_id, p in daftar_produk.items()
-                    if p.get("Penjual") == hapus_akun
-                ]
-                for k_id in produk_dihapus:
-                    del daftar_produk[k_id]
-                for cart in keranjang.values():
-                    cart.pop(k_id, None)
-                simpan_database()
-                print(f"✅ Berhasil Menghapus Akun Bernama '{hapus_akun}' dari Daftar Akun User!")
-                bersihkan_layar_dengan_jeda(1.8)
-            else:
-                print("❗ Nama Akun yang Dimasukkan Tidak Valid/Terdeteksi")
-                bersihkan_layar_dengan_jeda(1.8)
+                hapus_akun = input("Silahkan Masukkan Nama Akun : ").strip()
+                if hapus_akun in akun_user:
+                    del akun_user[hapus_akun]
+                    saldo_user.pop(hapus_akun, None)
+                    keranjang.pop(hapus_akun, None)
+                    riwayat_pesanan.pop(hapus_akun, None)
+                    pengajuan_saldo[:] = [
+                        item for item in pengajuan_saldo if item.get("username") != hapus_akun
+                    ]
+                    produk_dihapus = [
+                        k_id for k_id, p in daftar_produk.items()
+                        if p.get("Penjual") == hapus_akun
+                    ]
+                    for k_id in produk_dihapus:
+                        del daftar_produk[k_id]
+                    for cart in keranjang.values():
+                        cart.pop(k_id, None)
+                    simpan_database()
+                    print(f"✅ Berhasil Menghapus Akun Bernama '{hapus_akun}' dari Daftar Akun User!")
+                    bersihkan_layar_dengan_jeda(1.8)
+                else:
+                    print("❗ Nama Akun yang Dimasukkan Tidak Valid/Terdeteksi")
+                    bersihkan_layar_dengan_jeda(1.8)
 
         elif pilihan_admin == "3":
             kelola_pengajuan_saldo()
