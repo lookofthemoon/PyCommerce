@@ -107,7 +107,7 @@ def lihat_pengajuan_saldo_saya(username):
         for item in riwayat_saya
     ]
     cetak_tabel(field_names, rows)
-    input("\nTekan Enter untuk kembali ke Menu User...")
+    input("\nTekan Enter untuk kembali ke Menu Saldo...")
 
 def kelola_saldo_user(username):
     while True:
@@ -663,7 +663,7 @@ def kelola_keranjang_dan_checkout(username, lewati_bersihkan_awal=False):
 
         if pilihan_aksi == "1":
             tampilkan_isi_keranjang(username)
-            input("\nSilahkan Tekan Enter untuk Kembali ke Menu Keranjang & Checkout")
+            input("\nTekan Enter untuk Kembali ke Menu Keranjang & Checkout...")
         elif pilihan_aksi == "2":
             hapus_keranjang(username)
         elif pilihan_aksi == "3":
