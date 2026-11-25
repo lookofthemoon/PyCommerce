@@ -29,10 +29,15 @@ def kumpulkan_semua_transaksi(filter_username=None):
 
         for idx, pesanan in enumerate(daftar_trx, 1):
             items_dict = pesanan.get("Item", {})
+            detail_item = pesanan.get("Detail_Item", {})
             ringkasan_item = []
             if isinstance(items_dict, dict):
                 for k_id, jml in items_dict.items():
-                    ringkasan_item.append(f"{k_id} (x{jml})")
+                    if isinstance(detail_item, dict) and k_id in detail_item:
+                        nama_ringkas = detail_item[k_id].get("Nama", k_id)
+                        ringkasan_item.append(f"{k_id} - {nama_ringkas} (x{jml})")
+                    else:
+                        ringkasan_item.append(f"{k_id} (x{jml})")
 
             hasil.append({
                 "id_transaksi": pesanan.get("id_transaksi", f"LEGACY-{idx:03d}"),
@@ -264,8 +269,9 @@ def tampilkan_menu_admin(username="Admin"):
                     ]
                     for k_id in produk_dihapus:
                         del daftar_produk[k_id]
-                    for cart in keranjang.values():
-                        cart.pop(k_id, None)
+                        for cart in keranjang.values():
+                            if isinstance(cart, dict):
+                                cart.pop(k_id, None)
                     simpan_database()
                     print(f"✅ Berhasil Menghapus Akun Bernama '{hapus_akun}' dari Daftar Akun User!")
                     bersihkan_layar_dengan_jeda(1.8)

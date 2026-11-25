@@ -31,19 +31,17 @@ def generate_id_transaksi():
     return f"TRX{nomor_tertinggi + 1:03d}"
 
 def generate_id_produk(produk_dict):
-    nomor_tertinggi = 0
+    id_terpakai = set()
     for k_id in produk_dict.keys():
-        match = re.fullmatch(r"K(\d{3})", str(k_id))
+        match = re.fullmatch(r"K(\d{3})", str(k_id).strip().upper())
         if match:
-            angka = int(match.group(1))
-            if angka > nomor_tertinggi:
-                nomor_tertinggi = angka
+            id_terpakai.add(int(match.group(1)))
 
-    nomor_berikutnya = nomor_tertinggi + 1
-    if nomor_berikutnya > 999:
-        return None
+    for nomor in range(1, 1000):
+        if nomor not in id_terpakai:
+            return f"K{nomor:03d}"
 
-    return f"K{nomor_berikutnya:03d}"
+    return None
 
 def ambil_password(prompt="Masukkan Password Akun : "):
     return pwinput.pwinput(prompt=prompt, mask="*")

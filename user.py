@@ -499,10 +499,17 @@ def checkout_keranjang(username):
             return False
 
         items_struk = []
+        detail_item_pesanan = {}
         for k_id, jumlah in keranjang[username].items():
             p = daftar_produk[k_id]
             p["Stok"] -= jumlah
             items_struk.append((p["Nama"], p["Harga"], jumlah))
+            detail_item_pesanan[k_id] = {
+                "Nama": p["Nama"],
+                "Harga": p["Harga"],
+                "Tipe": p.get("Tipe", "-"),
+                "Jumlah": jumlah,
+            }
 
         saldo_user[username] = saldo_saat_ini - total_belanja
 
@@ -514,9 +521,9 @@ def checkout_keranjang(username):
             "id_transaksi": id_trx,
             "waktu": waktu_trx,
             "Item": keranjang[username].copy(),
+            "Detail_Item": detail_item_pesanan,
             "Total": total_belanja,
         })
-
         keranjang[username] = {}
         simpan_database()
         print("\n✅ Checkout Berhasil! Saldo Telah Dipotong, Stok Diperbarui, dan Pesanan Sedang Diproses.")
@@ -686,13 +693,31 @@ def lihat_pesanan(username):
         bersihkan_layar_dengan_jeda(1.8)
     else:
         print(f"\n=== RIWAYAT PESANAN SAYA ({username}) ===")
-        field_names = ["ID Produk", "Nama Produk", "Jumlah Beli"]
+        field_names = ["ID Produk", "Nama Produk", "Harga Satuan", "Jumlah Beli", "Subtotal"]
         for idx, pesanan in enumerate(riwayat_pesanan[username], 1):
+            detail_tersimpan = pesanan.get("Detail_Item", {})
             print(f"\nPesanan #{idx} (Total: {format_rupiah(pesanan['Total'])})")
-            rows = [
-                [k_id, daftar_produk.get(k_id, {}).get("Nama", f"Produk Terhapus ({k_id})"), jml]
-                for k_id, jml in pesanan["Item"].items()
-            ]
+            rows = []
+            for k_id, jml in pesanan["Item"].items():
+                if isinstance(detail_tersimpan, dict) and k_id in detail_tersimpan:
+                    info = detail_tersimpan[k_id]
+                    nama_p = info.get("Nama", f"Produk ({k_id})")
+                    harga_p = info.get("Harga", 0)
+                    jml_p = info.get("Jumlah", jml)
+                else:
+                    produk_katalog = daftar_produk.get(k_id, {})
+                    nama_p = produk_katalog.get("Nama", f"Produk Terhapus ({k_id})")
+                    harga_p = produk_katalog.get("Harga", 0)
+                    jml_p = jml
+
+                subtotal_p = harga_p * jml_p
+                rows.append([
+                    k_id,
+                    nama_p,
+                    format_rupiah(harga_p),
+                    jml_p,
+                    format_rupiah(subtotal_p),
+                ])
             cetak_tabel(field_names, rows)
         input("Tekan Enter untuk Kembali ke Menu User...")
 

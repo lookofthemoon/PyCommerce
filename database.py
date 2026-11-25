@@ -6,7 +6,10 @@ DB_FILE = os.path.join(BASE_DIR, "database.json")
 
 DATA_DEFAULT = {
     "akun_admin": {
-        "Admin": "Pyc1#"
+        "Alya": "Alya1#",
+        "Nando": "Nando2#",
+        "Novi": "Novi3#",
+        "Adam": "Adam4#"
     },
     "akun_user": {},
     "saldo_user": {},
