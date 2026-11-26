@@ -20,6 +20,7 @@ from utils import (
     bersihkan_layar_dengan_jeda,
     format_rupiah,
     cetak_ketentuan,
+    mengandung_emoji,
 )
 
 LIST_TIPE = ["Elektronik", "Pakaian", "Kecantikan", "Makanan", "Minuman", "Lainnya"]
@@ -131,23 +132,27 @@ def kelola_saldo_user(username):
 def input_nama_produk():
     MIN_LEN = 3
     MAX_LEN = 25
-    
+
     cetak_ketentuan(
         "--- KETENTUAN NAMA PRODUK ---",
         [
             ["Panjang Karakter", f"{MIN_LEN} - {MAX_LEN} karakter"],
             ["Jenis Karakter", "Hanya huruf (A-Z / a-z) dan spasi"],
-            ["Larangan", "Tidak boleh kosong, angka, atau simbol"],
+            ["Larangan", "Tidak boleh kosong, angka, simbol, atau emoji"],
         ],
     )
-    
+
     nama_p = input(f"Nama Produk (Hanya Huruf/Spasi, {MIN_LEN}-{MAX_LEN} Karakter): ").strip()
+
+    if mengandung_emoji(nama_p):
+        print("❗ Nama Produk Tidak Boleh Mengandung Emoji.")
+        return None
 
     if not (MIN_LEN <= len(nama_p) <= MAX_LEN):
         print(f"❗ Nama Produk Harus Memiliki Panjang Antara {MIN_LEN} hingga {MAX_LEN} Karakter.")
         return None
 
-    if not re.match(r"^[A-Za-z\s]+$", nama_p):
+    if not re.fullmatch(r"[A-Za-z\s]+", nama_p):
         print("❗ Nama Produk Hanya Boleh Mengandung Huruf dan Spasi (Tidak Boleh Ada Angka atau Simbol).")
         return None
 
@@ -196,12 +201,17 @@ def pilih_tipe_produk():
                     print("❗ Kategori Produk Tidak Boleh Kosong.")
                     bersihkan_layar_dengan_jeda(1.8)
                     continue
+                
+                if mengandung_emoji(kategori_kustom):
+                    print("❗ Kategori Produk Tidak Boleh Mengandung Emoji.")
+                    bersihkan_layar_dengan_jeda(1.8)
+                    continue
 
                 if not re.fullmatch(r"[A-Za-z\s]+", kategori_kustom):
                     print("❗ Kategori Produk Hanya Boleh Menggunakan Huruf dan Spasi (Tanpa Angka/Simbol).")
                     bersihkan_layar_dengan_jeda(1.8)
                     continue
-
+                
                 return kategori_kustom
             continue
 
@@ -310,7 +320,10 @@ def ubah_produk_milik_user(username):
 
     nama_baru = input(f"Nama Produk baru [{produk['Nama']}] : ").strip()
     if nama_baru:
-        if not (3 <= len(nama_baru) <= 25) or not re.match(r"^[A-Za-z\s]+$", nama_baru):
+        if mengandung_emoji(nama_baru):
+            print("❗ Nama Produk Tidak Boleh Mengandung Emoji. Perubahan Nama Dibatalkan.")
+            bersihkan_layar_dengan_jeda(2.5)
+        elif not (3 <= len(nama_baru) <= 25) or not re.fullmatch(r"[A-Za-z\s]+", nama_baru):
             print("❗ Nama Produk Harus 3-25 Karakter dan Hanya Berisi Huruf/Spasi. Perubahan Nama Dibatalkan.")
             bersihkan_layar_dengan_jeda(3.0)
         else:

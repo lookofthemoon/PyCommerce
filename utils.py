@@ -83,7 +83,36 @@ def input_batal(prompt):
         raise Batal
     return data
 
+EMOJI_PATTERN = re.compile(
+    r"["
+    r"\U0001F1E6-\U0001F1FF"
+    r"\U0001F300-\U0001F5FF"
+    r"\U0001F600-\U0001F64F"
+    r"\U0001F680-\U0001F6FF"
+    r"\U0001F700-\U0001F77F"
+    r"\U0001F780-\U0001F7FF"
+    r"\U0001F800-\U0001F8FF"
+    r"\U0001F900-\U0001F9FF"
+    r"\U0001FA00-\U0001FA6F"
+    r"\U0001FA70-\U0001FAFF"
+    r"\u2600-\u26FF"
+    r"\u2700-\u27BF"
+    r"\uFE0F"
+    r"\u200D"
+    r"]",
+    re.UNICODE,
+)
+
+SIMBOL_ASCII_PATTERN = re.compile(r"[!@#$%^&*()_\-+=\[\]{};:'\",.<>/?\\|~]")
+
+def mengandung_emoji(teks):
+    if not isinstance(teks, str):
+        return False
+    return bool(EMOJI_PATTERN.search(teks))
+
 def validasi_username(username):
+    if mengandung_emoji(username):
+        return "Username Tidak Boleh Mengandung Emoji!"
     if len(username) < 4:
         return "Username Minimal 4 Karakter."
     if len(username) > 8:
@@ -93,6 +122,8 @@ def validasi_username(username):
     return None
 
 def validasi_password(password):
+    if mengandung_emoji(password):
+        return "Password Tidak Boleh Mengandung Emoji!"
     if len(password) < 4:
         return "Password Minimal 4 Karakter."
     if len(password) > 8:
@@ -103,7 +134,7 @@ def validasi_password(password):
         return "Password Harus Mengandung Minimal 1 Huruf Kecil."
     if not re.search(r"\d", password):
         return "Password Harus Mengandung Minimal 1 Angka."
-    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+    if not SIMBOL_ASCII_PATTERN.search(password):
         return "Password Harus Memiliki Minimal 1 Simbol."
     return None
 
@@ -124,10 +155,10 @@ def menu_awal():
 def menu_admin(username):
     field_names = ["No", f"Opsi Menu Admin ({username})"]
     rows = [
-        ["1", "Lihat Daftar Akun User"],
-        ["2", "Hapus Akun dari Daftar Akun User"],
-        ["3", "Kelola Pengajuan Isi Saldo User"],
-        ["4", "Pantau Riwayat Transaksi User"],
+        ["1", "Lihat Daftar Akun User (Read)"],
+        ["2", "Hapus Akun dari Daftar Akun User (Delete)"],
+        ["3", "Kelola Pengajuan Isi Saldo User (Update)"],
+        ["4", "Pantau Riwayat Transaksi User (Read)"],
         ["5", "Keluar Dari Menu Akses Admin"],
     ]
     cetak_tabel(field_names, rows)
@@ -135,11 +166,11 @@ def menu_admin(username):
 def menu_user(username):
     field_names = ["No", f"Opsi Menu User ({username})"]
     rows = [
-        ["1", "Mulai Jual Produk Baru"],
-        ["2", "Kelola Produk Saya"],
-        ["3", "Lihat Katalog & Tambahkan ke Keranjang"],
-        ["4", "Lihat Pesanan Saya"],
-        ["5", "Saldo & Pengajuan Top-Up"],
+        ["1", "Mulai Jual Produk Baru (Create)"],
+        ["2", "Kelola Produk Saya (Update)"],
+        ["3", "Lihat Katalog & Tambahkan ke Keranjang (Read & Create)"],
+        ["4", "Lihat Pesanan Saya (Read)"],
+        ["5", "Saldo & Pengajuan Top-Up (Update)"],
         ["6", "Keluar Dari Menu Akses User"],
     ]
     cetak_tabel(field_names, rows)

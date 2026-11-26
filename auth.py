@@ -7,6 +7,7 @@ from utils import (
     validasi_password,
     bersihkan_layar_dengan_jeda,
     cetak_ketentuan,
+    bersihkan_layar,
 )
 
 def login():
@@ -51,52 +52,69 @@ def login():
 
 
 def registrasi():
-    print("\n=== REGISTRASI AKUN USER BARU ===")
-    cetak_ketentuan(
-        "--- KETENTUAN USERNAME ---",
-        [
-            ["Panjang Karakter", "4 - 8 Karakter"],
-            ["Jenis Karakter", "Hanya Huruf (A-Z / a-z)"],
-        ]
-    )
-    cetak_ketentuan(
-        "--- KETENTUAN PASSWORD ---",
-        [
-            ["Panjang Karakter", "4 - 8 Karakter"],
-            ["Huruf Kapital", "Wajib Minimal 1 Huruf Besar (A-Z)"],
-            ["Huruf Kecil", "Wajib Minimal 1 Huruf Kecil (a-z)"],
-            ["Angka", "Wajib Minimal 1 Angka (0-9)"],
-            ["Simbol", "Wajib Minimal 1 Simbol (Contoh: !@#$%^&*)"],
-        ],
-    )
-    try:
-        user_baru = input_batal("Masukkan Username Baru : ").strip()
-    except Batal:
-        print("❗ Registrasi Dibatalkan.")
-        bersihkan_layar_dengan_jeda(1.5)
-        return
+    while True:
+        bersihkan_layar()
+        print("\n=== REGISTRASI AKUN USER BARU ===")
+        print("(Ketik 'batal' untuk kembali ke Menu Utama)")
+        cetak_ketentuan(
+            "--- KETENTUAN USERNAME ---",
+            [
+                ["Panjang Karakter", "4 - 8 Karakter"],
+                ["Jenis Karakter", "Hanya Huruf (A-Z / a-z)"],
+                ["Larangan Emoji", "Tidak Boleh Mengandung Emoji"],
+            ],
+        )
+        cetak_ketentuan(
+            "--- KETENTUAN PASSWORD ---",
+            [
+                ["Panjang Karakter", "4 - 8 Karakter"],
+                ["Huruf Kapital", "Wajib Minimal 1 Huruf Besar (A-Z)"],
+                ["Huruf Kecil", "Wajib Minimal 1 Huruf Kecil (a-z)"],
+                ["Angka", "Wajib Minimal 1 Angka (0-9)"],
+                ["Simbol", "Wajib Minimal 1 Simbol (Contoh: !@#$%^&*)"],
+                ["Larangan Emoji", "Tidak Boleh Mengandung Emoji"],
+            ],
+        )
 
-    pesan_user = validasi_username(user_baru)
-    if pesan_user:
-        print("❗", pesan_user)
+        try:
+            user_baru = input_batal("Masukkan Username Baru : ").strip()
+        except Batal:
+            print("❗ Registrasi Dibatalkan.")
+            bersihkan_layar_dengan_jeda(1.5)
+            return
+
+        pesan_user = validasi_username(user_baru)
+        if pesan_user:
+            print("❗", pesan_user)
+            bersihkan_layar_dengan_jeda(1.8)
+            continue
+
+        if user_baru in akun_user or user_baru in akun_admin:
+            print("❗ Username Tersebut Sudah Terdaftar!")
+            bersihkan_layar_dengan_jeda(1.8)
+            continue
+
+        try:
+            pass_baru = ambil_password("Masukkan Password Baru : ")
+        except Batal:
+            print("❗ Registrasi Dibatalkan.")
+            bersihkan_layar_dengan_jeda(1.5)
+            return
+
+        if pass_baru.strip().lower() == "batal":
+            print("❗ Registrasi Dibatalkan.")
+            bersihkan_layar_dengan_jeda(1.5)
+            return
+
+        pesan_pass = validasi_password(pass_baru)
+        if pesan_pass:
+            print("❗", pesan_pass)
+            bersihkan_layar_dengan_jeda(1.8)
+            continue
+
+        akun_user[user_baru] = pass_baru
+        saldo_user[user_baru] = 0
+        simpan_database()
+        print(f"✅ Akun user '{user_baru}' Berhasil Didaftarkan! Silahkan Login.")
         bersihkan_layar_dengan_jeda(1.8)
         return
-
-    if user_baru in akun_user or user_baru in akun_admin:
-        print("❗ Username Tersebut Sudah Terdaftar!")
-        bersihkan_layar_dengan_jeda(1.8)
-        return
-
-    pass_baru = ambil_password("Masukkan Password Baru : ")
-    pesan_pass = validasi_password(pass_baru)
-
-    if pesan_pass:
-        print("❗", pesan_pass)
-        bersihkan_layar_dengan_jeda(1.8)
-        return
-
-    akun_user[user_baru] = pass_baru
-    saldo_user[user_baru] = 0
-    simpan_database()
-    print(f"✅ Akun user '{user_baru}' Berhasil Didaftarkan! Silahkan Login.")
-    bersihkan_layar_dengan_jeda(1.8)

@@ -85,7 +85,7 @@ def pantau_transaksi_user():
             ["No", "Opsi Pemantauan Transaksi"],
             [
                 ["1", "Lihat Semua Transaksi Seluruh User"],
-                ["2", "Filter Transaksi Berdasarkan Username"],
+                ["2", "Filter Transaksi Berdasarkan Username (Searching. Case : Insensitive)"],
                 ["3", "Kembali ke Menu Admin"],
             ],
         )

@@ -5,10 +5,79 @@
     "Novi": "Novi3#",
     "Adam": "Adam4#"
   },
-  "akun_user": {},
-  "saldo_user": {},
-  "pengajuan_saldo": [],
-  "daftar_produk": {},
-  "keranjang": {},
-  "riwayat_pesanan": {}
+  "akun_user": {
+    "User": "User1#",
+    "Pengguna": "Pengguna2#"
+  },
+  "saldo_user": {
+    "User": 0,
+    "Pengguna": 750000
+  },
+  "pengajuan_saldo": [
+    {
+      "id": "TOP001",
+      "username": "Pengguna",
+      "nominal": 1000000,
+      "status": "Diterima",
+      "tanggal": "26-11-2026 19:53:21",
+      "waktu_proses": "26-11-2026 19:53:42"
+    }
+  ],
+  "daftar_produk": {
+    "K001": {
+      "Nama": "Speaker",
+      "Stok": 11,
+      "Tipe": "Elektronik",
+      "Harga": 250000,
+      "Penjual": "User",
+      "Deskripsi": "Portable"
+    },
+    "K002": {
+      "Nama": "Kemeja",
+      "Stok": 10,
+      "Tipe": "Pakaian",
+      "Harga": 99000,
+      "Penjual": "User",
+      "Deskripsi": "Katun"
+    },
+    "K003": {
+      "Nama": "Kerupuk Udang",
+      "Stok": 5,
+      "Tipe": "Makanan",
+      "Harga": 20000,
+      "Penjual": "User",
+      "Deskripsi": "Enak"
+    },
+    "K004": {
+      "Nama": "Lipstik",
+      "Stok": 5,
+      "Tipe": "Kecantikan",
+      "Harga": 79999,
+      "Penjual": "User",
+      "Deskripsi": "Keluaran Terbaru"
+    }
+  },
+  "keranjang": {
+    "Pengguna": {}
+  },
+  "riwayat_pesanan": {
+    "Pengguna": [
+      {
+        "id_transaksi": "TRX001",
+        "waktu": "26-11-2026 20:14:54",
+        "Item": {
+          "K001": 1
+        },
+        "Detail_Item": {
+          "K001": {
+            "Nama": "Speaker",
+            "Harga": 250000,
+            "Tipe": "Elektronik",
+            "Jumlah": 1
+          }
+        },
+        "Total": 250000
+      }
+    ]
+  }
 }
