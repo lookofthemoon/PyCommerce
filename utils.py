@@ -1,5 +1,6 @@
 from prettytable import PrettyTable, ALL, DOUBLE_BORDER
 from datetime import datetime
+from database import riwayat_pesanan
 import pwinput
 import time
 import os
